@@ -15,12 +15,12 @@ export default function HeaderComponent() {
 
   return (
     <header className="bg-[#F5F5F3] sticky top-0 z-50 shadow-sm">
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-6 py-5">
         <div className="flex items-center justify-between">
           {/* Left side - Brand name */}
           <Link 
             href="/" 
-            className="text-[#292826] text-2xl font-bold hover:text-[#8E521E] transition-colors duration-200"
+            className="text-[#292826] text-2xl font-medium hover:text-[#8E521E] transition-colors duration-200"
           >
             Insan Permata
           </Link>
