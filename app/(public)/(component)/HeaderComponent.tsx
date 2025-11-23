@@ -14,7 +14,7 @@ export default function HeaderComponent() {
   ];
 
   return (
-    <header className="bg-[#F5F5F3] sticky top-0 z-50 shadow-sm">
+    <header className="bg-[#F5F5F3]/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
       <nav className="container mx-auto px-6 py-5">
         <div className="flex items-center justify-between">
           {/* Left side - Brand name */}

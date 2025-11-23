@@ -11,7 +11,7 @@ export default function FooterComponent() {
     const email = 'info@insanpermata.org';
 
   return (
-    <footer className="bg-[#F1F0EE] py-12 md:py-16">
+    <footer className="relative z-10 bg-[#F1F0EE] py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Logo & Tagline */}

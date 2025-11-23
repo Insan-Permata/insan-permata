@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full flex flex-col`}
       >
         <HeaderComponent />
-        <main className="flex-grow bg-[#F5F5F3]">
+        <main className="flex-grow relative">
           {children}
         </main>
         <FooterComponent />
