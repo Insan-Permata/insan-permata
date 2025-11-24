@@ -10,6 +10,7 @@ export default function HeaderComponent() {
     { href: "/our-children", label: "Our Children" },
     { href: "/news", label: "News" },
     { href: "/support", label: "How to Support" },
+    { href: "/meet-the-staff", label: "Meet the Staff" },
     { href: "/contact", label: "Contact" },
   ];
 
