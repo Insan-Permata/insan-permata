@@ -21,8 +21,8 @@ export default function Home() {
   return (
     <div className="relative w-full">
       {/* Hero Section */}
-      <div className="relative w-full min-h-screen">
-        {/* Background Carousel */}
+      <div className="relative w-full min-h-screen pt-0">
+        {/* Background Carousel - Fixed behind header */}
         <BackgroundCarousel 
           images={backgroundImages}
           interval={5000}
@@ -31,7 +31,7 @@ export default function Home() {
         />
 
         {/* Hero Content */}
-        <div className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-[#F5F5F3] mb-6 max-w-4xl leading-tight drop-shadow-lg">
             Lorem ipsum dolor sit amet consectetur adipiscing elit
           </h1>

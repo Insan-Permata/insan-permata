@@ -15,8 +15,10 @@ export default function HeaderComponent() {
   ];
 
   return (
-    <header className="bg-[#F5F5F3]/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-      <nav className="container mx-auto px-6 py-5">
+    <header className="sticky top-0 z-50 relative bg-[#F5F5F3]/30 backdrop-blur-md">
+     
+      {/* Content */}
+      <nav className="container mx-auto px-6 py-5 relative z-10">
         <div className="flex items-center justify-between">
           {/* Left side - Brand name */}
           <Link 

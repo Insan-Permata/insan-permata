@@ -12,7 +12,7 @@ export default function PageHero({
   imageSrc,
   imageAlt,
   title,
-  height = '30vh',
+  height = '50vh',
   overlayOpacity = 0.4,
 }: PageHeroProps) {
   return (
