@@ -62,7 +62,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Address Card */}
           <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -78,7 +78,7 @@ export default function ContactPage() {
 
           {/* Phone Card */}
           <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
@@ -92,7 +92,7 @@ export default function ContactPage() {
 
           {/* Email Card */}
           <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#292826] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8E521E] focus:border-transparent outline-none transition-all"
                   placeholder="John Doe"
                 />
               </div>
@@ -145,7 +145,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#292826] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8E521E] focus:border-transparent outline-none transition-all"
                   placeholder="john@example.com"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function ContactPage() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#292826] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8E521E] focus:border-transparent outline-none transition-all"
                   placeholder="+62 XXX XXXX XXXX"
                 />
               </div>
@@ -175,7 +175,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#292826] focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8E521E] focus:border-transparent outline-none transition-all"
                 >
                   <option value="">Select a subject</option>
                   <option value="general">General Inquiry</option>
@@ -197,7 +197,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#292826] focus:border-transparent outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8E521E] focus:border-transparent outline-none transition-all resize-none"
                   placeholder="Tell us how we can help you..."
                 />
               </div>
@@ -205,7 +205,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={formStatus === 'submitting'}
-                className="w-full bg-[#292826] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#3d3b38] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#8E521E] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#a86424] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {formStatus === 'submitting' ? 'Sending...' : 'Send Message'}
               </button>
@@ -246,7 +246,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-[#292826] mb-2">Looking to Donate?</h3>
                   <p className="text-[#292826] opacity-70 text-sm">
-                    Visit our <a href="/support" className="text-[#292826] underline hover:no-underline">Support page</a> for donation options and information.
+                    Visit our <a href="/support" className="text-[#8E521E] underline hover:no-underline">Support page</a> for donation options and information.
                   </p>
                 </div>
                 <div>

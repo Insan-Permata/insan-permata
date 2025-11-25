@@ -6,7 +6,7 @@ import PageHero from '../(component)/PageHero';
 export default function SupportPage() {
   const [donationType, setDonationType] = useState<'once' | 'monthly'>('once');
   const [selectedAmount, setSelectedAmount] = useState<number | null>(25);
-  const [customAmount, setCustomAmount] = useState<string>('');
+  const [customAmount, setCustomAmount] = useState<string>('25');
   const [amountError, setAmountError] = useState<string>('');
 
   const presetAmounts = [10, 25, 100];
@@ -118,7 +118,7 @@ export default function SupportPage() {
               <button
                 onClick={() => setDonationType('once')}
                 className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all ${donationType === 'once'
-                  ? 'bg-[#292826] text-white'
+                  ? 'bg-[#8E521E] text-white'
                   : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
                   }`}
               >
@@ -127,7 +127,7 @@ export default function SupportPage() {
               <button
                 onClick={() => setDonationType('monthly')}
                 className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${donationType === 'monthly'
-                  ? 'bg-[#292826] text-white'
+                  ? 'bg-[#8E521E] text-white'
                   : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
                   }`}
               >
@@ -156,8 +156,8 @@ export default function SupportPage() {
                   key={amount}
                   onClick={() => handleAmountSelect(amount)}
                   className={`py-4 px-6 rounded-xl font-semibold text-lg transition-all ${selectedAmount === amount
-                    ? 'bg-[#292826] text-white ring-2 ring-[#292826] ring-offset-2'
-                    : 'bg-gray-50 text-[#292826] border-2 border-gray-200 hover:border-[#292826]'
+                    ? 'bg-[#8E521E] text-white ring-2 ring-[#8E521E] ring-offset-2'
+                    : 'bg-gray-50 text-[#292826] border-2 border-gray-200 hover:border-[#8E521E]'
                     }`}
                 >
                   ${amount}
@@ -168,7 +168,7 @@ export default function SupportPage() {
             {/* Custom Amount Input */}
             <div className="mb-6">
               <div className={`relative border-2 rounded-xl overflow-hidden transition-all ${customAmount && !selectedAmount
-                ? 'border-[#292826] ring-2 ring-[#292826] ring-offset-2'
+                ? 'border-[#8E521E] ring-2 ring-[#8E521E] ring-offset-2'
                 : amountError
                   ? 'border-red-500'
                   : 'border-gray-200'
@@ -210,7 +210,7 @@ export default function SupportPage() {
             <button
               onClick={handleDonation}
               disabled={(!selectedAmount && !customAmount) || !!amountError}
-              className="w-full bg-[#292826] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#3d3b38] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#8E521E] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#a86424] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {donationType === 'monthly' ? 'Donate Monthly' : 'Donate Now'}
             </button>
@@ -229,7 +229,7 @@ export default function SupportPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex items-start">
-              <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+              <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -243,7 +243,7 @@ export default function SupportPage() {
             </div>
 
             <div className="flex items-start">
-              <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+              <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
@@ -257,7 +257,7 @@ export default function SupportPage() {
             </div>
 
             <div className="flex items-start">
-              <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+              <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
@@ -271,7 +271,7 @@ export default function SupportPage() {
             </div>
 
             <div className="flex items-start">
-              <div className="w-12 h-12 bg-[#292826] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+              <div className="w-12 h-12 bg-[#8E521E] rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                 </svg>
@@ -293,7 +293,7 @@ export default function SupportPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-lg p-6 shadow-sm text-center">
-              <div className="w-16 h-16 bg-[#292826] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#8E521E] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -302,13 +302,13 @@ export default function SupportPage() {
               <p className="text-[#292826] opacity-70 mb-4">
                 Share your skills and time with our children. Tutoring, mentoring, or helping with activities.
               </p>
-              <a href="/contact" className="text-[#292826] font-medium underline hover:no-underline">
+              <a href="/contact" className="text-[#8E521E] font-medium underline hover:no-underline">
                 Learn More
               </a>
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm text-center">
-              <div className="w-16 h-16 bg-[#292826] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#8E521E] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
@@ -317,13 +317,13 @@ export default function SupportPage() {
               <p className="text-[#292826] opacity-70 mb-4">
                 Clothing, books, toys, and other items are always welcome and appreciated.
               </p>
-              <a href="/contact" className="text-[#292826] font-medium underline hover:no-underline">
+              <a href="/contact" className="text-[#8E521E] font-medium underline hover:no-underline">
                 Contact Us
               </a>
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm text-center">
-              <div className="w-16 h-16 bg-[#292826] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#8E521E] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
@@ -332,7 +332,7 @@ export default function SupportPage() {
               <p className="text-[#292826] opacity-70 mb-4">
                 Share our mission with friends and family. Every voice helps raise awareness.
               </p>
-              <a href="/contact" className="text-[#292826] font-medium underline hover:no-underline">
+              <a href="/contact" className="text-[#8E521E] font-medium underline hover:no-underline">
                 Get Involved
               </a>
             </div>
