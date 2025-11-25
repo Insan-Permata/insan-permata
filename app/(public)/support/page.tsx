@@ -13,7 +13,7 @@ export default function SupportPage() {
 
   const handleAmountSelect = (amount: number) => {
     setSelectedAmount(amount);
-    setCustomAmount('');
+    setCustomAmount(amount.toString());
     setAmountError('');
   };
 
@@ -112,14 +112,14 @@ export default function SupportPage() {
           </p>
 
           {/* Donation Card */}
-          <div className="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-lg">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl p-8 shadow-lg">
             {/* One-time vs Monthly Toggle */}
             <div className="flex gap-3 mb-6">
               <button
                 onClick={() => setDonationType('once')}
                 className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all ${donationType === 'once'
-                    ? 'bg-[#292826] text-white'
-                    : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
+                  ? 'bg-[#292826] text-white'
+                  : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
                   }`}
               >
                 Give once
@@ -127,8 +127,8 @@ export default function SupportPage() {
               <button
                 onClick={() => setDonationType('monthly')}
                 className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${donationType === 'monthly'
-                    ? 'bg-[#292826] text-white'
-                    : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
+                  ? 'bg-[#292826] text-white'
+                  : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
                   }`}
               >
                 Monthly
@@ -156,8 +156,8 @@ export default function SupportPage() {
                   key={amount}
                   onClick={() => handleAmountSelect(amount)}
                   className={`py-4 px-6 rounded-xl font-semibold text-lg transition-all ${selectedAmount === amount
-                      ? 'bg-[#292826] text-white ring-2 ring-[#292826] ring-offset-2'
-                      : 'bg-gray-50 text-[#292826] border-2 border-gray-200 hover:border-[#292826]'
+                    ? 'bg-[#292826] text-white ring-2 ring-[#292826] ring-offset-2'
+                    : 'bg-gray-50 text-[#292826] border-2 border-gray-200 hover:border-[#292826]'
                     }`}
                 >
                   ${amount}
@@ -168,10 +168,10 @@ export default function SupportPage() {
             {/* Custom Amount Input */}
             <div className="mb-6">
               <div className={`relative border-2 rounded-xl overflow-hidden transition-all ${customAmount && !selectedAmount
-                  ? 'border-[#292826] ring-2 ring-[#292826] ring-offset-2'
-                  : amountError
-                    ? 'border-red-500'
-                    : 'border-gray-200'
+                ? 'border-[#292826] ring-2 ring-[#292826] ring-offset-2'
+                : amountError
+                  ? 'border-red-500'
+                  : 'border-gray-200'
                 }`}>
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#292826]">
                   $
@@ -183,7 +183,7 @@ export default function SupportPage() {
                   value={customAmount}
                   onChange={(e) => handleCustomAmountChange(e.target.value)}
                   placeholder="Custom amount"
-                  className="w-full pl-12 pr-4 py-4 text-2xl font-bold text-[#292826] outline-none bg-transparent"
+                  className="w-full pl-12 pr-4 py-4 text-2xl font-bold text-[#292826] outline-none bg-transparent [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#292826] opacity-50">
                   USD
