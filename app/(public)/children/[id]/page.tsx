@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { children } from '@/data/children';
 import PageHero from '../../(component)/PageHero';
+import Breadcrumbs from '../../(component)/Breadcrumbs';
 
 interface ChildDetailPageProps {
     params: Promise<{
@@ -25,6 +26,14 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                 title={child.name}
                 height="30vh"
                 overlayOpacity={0.4}
+            />
+
+            <Breadcrumbs
+                items={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Our Children', href: '/our-children' },
+                    { label: child.name, href: `/children/${child.id}` }
+                ]}
             />
 
             <div className="max-w-7xl mx-auto px-6 py-12">

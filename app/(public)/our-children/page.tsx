@@ -1,5 +1,6 @@
 import ChildrenCard from '../(component)/ChildrenCard';
 import PageHero from '../(component)/PageHero';
+import Breadcrumbs from '../(component)/Breadcrumbs';
 import { children } from '@/data/children';
 
 export default function OurChildrenPage() {
@@ -13,6 +14,8 @@ export default function OurChildrenPage() {
         height="30vh"
         overlayOpacity={0.4}
       />
+
+      <Breadcrumbs />
 
       {/* Children Cards Section */}
       <section className="py-12 px-6">
