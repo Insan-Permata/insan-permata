@@ -8,7 +8,7 @@ export default function NewsPage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <PageHero
-        imageSrc="/news_bg_photos/1.jpg"
+        imageSrc="/news_bg_photos/2.jpg"
         imageAlt="News Background"
         title="News"
         height="30vh"

@@ -3,4 +3,7 @@ export interface NewsItem {
     title: string;
     imageUrl: string;
     date: Date;
+    author: string;
+    excerpt: string;
+    content?: string; // Optional, only loaded for detail view
 }
