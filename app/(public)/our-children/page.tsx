@@ -1,19 +1,10 @@
 import ChildrenCard from '../(component)/ChildrenCard';
 import PageHero from '../(component)/PageHero';
+import { children } from '@/data/children';
 
 export default function OurChildrenPage() {
-  // Placeholder data - Replace with real data later
-  const children = [
-    { name: 'Ahmad', photo: '/home_story_and_mission_photos/1.jpg' },
-    { name: 'Siti', photo: '/home_story_and_mission_photos/2.jpg' },
-    { name: 'Budi', photo: '/home_story_and_mission_photos/3.jpg' },
-    { name: 'Dewi', photo: '/home_story_and_mission_photos/4.jpg' },
-    { name: 'Rizki', photo: '/home_story_and_mission_photos/5.jpg' },
-    { name: 'Lina', photo: '/home_story_and_mission_photos/6.jpg' },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#F5F5F3]">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <PageHero
         imageSrc="/our_children_bg/1.png"
@@ -27,11 +18,12 @@ export default function OurChildrenPage() {
       <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {children.map((child, index) => (
+            {children.map((child) => (
               <ChildrenCard
-                key={index}
+                key={child.id}
+                id={child.id}
                 name={child.name}
-                photo={child.photo}
+                photo={child.photoUrl}
               />
             ))}
           </div>
@@ -40,4 +32,3 @@ export default function OurChildrenPage() {
     </div>
   );
 }
-

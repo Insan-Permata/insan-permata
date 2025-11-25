@@ -1,0 +1,58 @@
+import { Child } from '../types/child';
+
+export const children: Child[] = [
+    {
+        id: '1',
+        name: 'Ahmad',
+        educationalStage: 'Elementary School',
+        aboutMe: 'Ahmad is a cheerful boy who loves to help his friends. He is very active in school activities and enjoys playing soccer.',
+        photoUrl: '/home_story_and_mission_photos/1.jpg',
+        interests: ['Soccer', 'Drawing', 'Reading'],
+        favoriteBibleVerse: 'Philippians 4:13 - "I can do all things through Christ who strengthens me."',
+    },
+    {
+        id: '2',
+        name: 'Siti',
+        educationalStage: 'Junior High School',
+        aboutMe: 'Siti is a diligent student who excels in mathematics. She dreams of becoming a teacher one day.',
+        photoUrl: '/home_story_and_mission_photos/2.jpg',
+        interests: ['Mathematics', 'Cooking', 'Singing'],
+        favoriteBibleVerse: 'Psalm 23:1 - "The Lord is my shepherd; I shall not want."',
+    },
+    {
+        id: '3',
+        name: 'Budi',
+        educationalStage: 'Elementary School',
+        aboutMe: 'Budi is a creative soul who loves to paint and draw. He often wins art competitions at school.',
+        photoUrl: '/home_story_and_mission_photos/3.jpg',
+        interests: ['Painting', 'Cycling', 'Gardening'],
+        favoriteBibleVerse: 'Jeremiah 29:11 - "For I know the plans I have for you, declares the Lord..."',
+    },
+    {
+        id: '4',
+        name: 'Dewi',
+        educationalStage: 'Senior High School',
+        aboutMe: 'Dewi is a natural leader and is the president of the student council. She is passionate about social work.',
+        photoUrl: '/home_story_and_mission_photos/4.jpg',
+        interests: ['Leadership', 'Volunteering', 'Public Speaking'],
+        favoriteBibleVerse: 'Proverbs 3:5 - "Trust in the Lord with all your heart and lean not on your own understanding."',
+    },
+    {
+        id: '5',
+        name: 'Rizki',
+        educationalStage: 'Kindergarten',
+        aboutMe: 'Rizki is full of energy and brings joy to everyone around him. He loves to play with his toy cars.',
+        photoUrl: '/home_story_and_mission_photos/5.jpg',
+        interests: ['Cars', 'Running', 'Playing Tag'],
+        favoriteBibleVerse: 'Matthew 19:14 - "Let the little children come to me, and do not hinder them..."',
+    },
+    {
+        id: '6',
+        name: 'Lina',
+        educationalStage: 'Junior High School',
+        aboutMe: 'Lina is a quiet but observant girl who loves to write stories. She hopes to publish a book someday.',
+        photoUrl: '/home_story_and_mission_photos/6.jpg',
+        interests: ['Writing', 'Reading', 'Badminton'],
+        favoriteBibleVerse: 'Romans 8:28 - "And we know that in all things God works for the good of those who love him..."',
+    },
+];
