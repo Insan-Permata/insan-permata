@@ -9,9 +9,7 @@ export default function PublicLayout({
     return (
         <div >
             <HeaderComponent />
-            <main className="flex-1 p-8">
-                {children}
-            </main>
+            {children}
             <FooterComponent />
 
         </div>
