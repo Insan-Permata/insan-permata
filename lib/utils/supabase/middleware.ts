@@ -42,11 +42,12 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
-    // Redirect authenticated users away from /login
-    if (request.nextUrl.pathname === '/login' && user) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin/dashboard'
-        return NextResponse.redirect(url)
+    if (user) {
+        if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname === '/login') {
+            const url = request.nextUrl.clone()
+            url.pathname = '/admin/dashboard'
+            return NextResponse.redirect(url)
+        }
     }
 
     return supabaseResponse
