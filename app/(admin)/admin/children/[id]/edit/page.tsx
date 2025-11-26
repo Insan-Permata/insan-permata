@@ -55,7 +55,7 @@ export default function EditChildPage({ params }: { params: Promise<{ id: string
     };
 
     return (
-        <div className="max-w-3xl space-y-6">
+        <div className="max-w-3xl mx-auto space-y-6">
             {/* Page Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -207,6 +207,20 @@ export default function EditChildPage({ params }: { params: Promise<{ id: string
                         defaultValue={child.story}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
                         placeholder="Tell us about this child..."
+                    />
+                </div>
+
+                {/* Bible Verse */}
+                <div>
+                    <label htmlFor="bible_verse" className="block text-sm font-medium text-foreground mb-2">
+                        Bible Verse
+                    </label>
+                    <textarea
+                        id="bible_verse"
+                        name="bible_verse"
+                        rows={3}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
+                        placeholder="Favorite Bible verse..."
                     />
                 </div>
 
