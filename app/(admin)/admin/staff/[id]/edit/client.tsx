@@ -2,31 +2,44 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import ImageUpload from '../../../(components)/ImageUpload';
-import { createStaffAction } from '@/lib/actions/staff.actions';
+import { ArrowLeft, Trash2 } from 'lucide-react';
+import ImageUpload from '../../../../(components)/ImageUpload';
+import DeleteModal from '../../../../(components)/DeleteModal';
+import { updateStaffAction, deleteStaffAction } from '@/lib/actions/staff.actions';
+import { Staff } from '@/lib/repositories/staff.repository';
 
-export default function NewStaffPage() {
+export default function EditStaffClient({ staff }: { staff: Staff }) {
     const [photoFile, setPhotoFile] = useState<File | null>(null);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
             {/* Page Header */}
-            <div className="flex items-center gap-4">
-                <Link
-                    href="/admin/staff"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                </Link>
-                <div>
-                    <h1 className="text-3xl font-bold text-foreground">Add New Staff</h1>
-                    <p className="text-foreground/60 mt-1">Create a new staff member profile</p>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <Link
+                        href="/admin/staff"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <h1 className="text-3xl font-bold text-foreground">Edit Staff</h1>
+                        <p className="text-foreground/60 mt-1">Update staff member profile</p>
+                    </div>
                 </div>
+                <button
+                    type="button"
+                    onClick={() => setDeleteModal(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                </button>
             </div>
 
             {/* Form */}
-            <form action={createStaffAction} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <form action={updateStaffAction.bind(null, staff.id)} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
                 {/* Name */}
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
@@ -37,6 +50,7 @@ export default function NewStaffPage() {
                         id="name"
                         name="name"
                         required
+                        defaultValue={staff.name}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                         placeholder="Enter staff member's name"
                     />
@@ -52,6 +66,7 @@ export default function NewStaffPage() {
                         id="role"
                         name="role"
                         required
+                        defaultValue={staff.role}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                         placeholder="e.g., Director, Teacher, House Mother"
                     />
@@ -66,6 +81,7 @@ export default function NewStaffPage() {
                         id="description"
                         name="description"
                         rows={4}
+                        defaultValue={staff.description || ''}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
                         placeholder="Tell us about this staff member..."
                     />
@@ -80,6 +96,7 @@ export default function NewStaffPage() {
                         id="bible_verse"
                         name="bible_verse"
                         rows={3}
+                        defaultValue={staff.bible_verse || ''}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
                         placeholder="Favorite Bible verse..."
                     />
@@ -89,6 +106,7 @@ export default function NewStaffPage() {
                 <ImageUpload
                     label="Photo"
                     name="photo"
+                    currentImage={staff.photo_url || undefined}
                     onImageChange={setPhotoFile}
                 />
 
@@ -104,10 +122,22 @@ export default function NewStaffPage() {
                         type="submit"
                         className="px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
                     >
-                        Create Staff Member
+                        Save Changes
                     </button>
                 </div>
             </form>
+
+            {/* Delete Modal */}
+            <DeleteModal
+                isOpen={deleteModal}
+                onClose={() => setDeleteModal(false)}
+                onConfirm={() => {
+                    deleteStaffAction(staff.id);
+                    setDeleteModal(false);
+                }}
+                itemName={staff.name}
+                itemType="Staff Member"
+            />
         </div>
     );
 }

@@ -1,13 +1,49 @@
-import { Users, Briefcase, Newspaper, TrendingUp } from 'lucide-react';
+import { Users, Briefcase, Newspaper, Images } from 'lucide-react';
 import Link from 'next/link';
+import { getAllChildren } from '@/lib/repositories/children.repository';
+import { getAllStaff } from '@/lib/repositories/staff.repository';
+import { getAllNews } from '@/lib/repositories/news.repository';
+import { getAllCarousels } from '@/lib/repositories/carousels.repository';
 
-export default function AdminDashboard() {
-  // Mock statistics - will be replaced with real data later
+export const dynamic = 'force-dynamic';
+
+export default async function AdminDashboard() {
+  const [children, staff, news, carousels] = await Promise.all([
+    getAllChildren(),
+    getAllStaff(),
+    getAllNews(),
+    getAllCarousels(),
+  ]);
+
   const stats = [
-    { name: 'Total Children', value: '24', icon: Users, href: '/admin/children', color: 'bg-blue-500' },
-    { name: 'Staff Members', value: '8', icon: Briefcase, href: '/admin/staff', color: 'bg-green-500' },
-    { name: 'News Articles', value: '15', icon: Newspaper, href: '/admin/news', color: 'bg-purple-500' },
-    { name: 'Total Views', value: '1,234', icon: TrendingUp, href: '#', color: 'bg-orange-500' },
+    {
+      label: 'Total Children',
+      value: children.length.toString(),
+      icon: Users,
+      color: 'bg-blue-500',
+      href: '/admin/children'
+    },
+    {
+      label: 'Staff Members',
+      value: staff.length.toString(),
+      icon: Briefcase,
+      color: 'bg-green-500',
+      href: '/admin/staff'
+    },
+    {
+      label: 'News Articles',
+      value: news.length.toString(),
+      icon: Newspaper,
+      color: 'bg-purple-500',
+      href: '/admin/news'
+    },
+    {
+      label: 'Carousel Images',
+      value: carousels.length.toString(),
+      icon: Images,
+      color: 'bg-orange-500',
+      href: '/admin/carousels'
+    },
   ];
 
   const quickActions = [
@@ -19,10 +55,9 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-foreground/60 mt-2">Welcome to the Insan Permata Admin Panel</p>
+        <p className="text-foreground/60 mt-1">Welcome to Insan Permata admin panel</p>
       </div>
 
       {/* Statistics Cards */}
@@ -31,17 +66,17 @@ export default function AdminDashboard() {
           const Icon = stat.icon;
           return (
             <Link
-              key={stat.name}
+              key={stat.label}
               href={stat.href}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow block"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground/60 font-medium">{stat.name}</p>
-                  <p className="text-3xl font-bold text-foreground mt-2">{stat.value}</p>
+              <div className="flex items-center gap-4">
+                <div className={`p-3 rounded-lg ${stat.color} bg-opacity-10`}>
+                  <Icon className={`w-6 h-6 ${stat.color.replace('bg-', 'text-')}`} />
                 </div>
-                <div className={`${stat.color} p-3 rounded-lg`}>
-                  <Icon className="w-6 h-6 text-white" />
+                <div>
+                  <p className="text-sm font-medium text-foreground/60">{stat.label}</p>
+                  <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
                 </div>
               </div>
             </Link>

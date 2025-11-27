@@ -2,14 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, X } from 'lucide-react';
-import ImageUpload from '../../../(components)/ImageUpload';
-import { createChildAction } from '@/lib/actions/children.actions';
+import { ArrowLeft, Plus, X, Trash2 } from 'lucide-react';
+import ImageUpload from '../../../../(components)/ImageUpload';
+import DeleteModal from '../../../../(components)/DeleteModal';
+import { updateChildAction, deleteChildAction } from '@/lib/actions/children.actions';
+import { Child } from '@/lib/repositories/children.repository';
 
-export default function NewChildPage() {
-    const [interests, setInterests] = useState<string[]>([]);
+export default function EditChildClient({ child }: { child: Child }) {
+    const [interests, setInterests] = useState<string[]>(child.interests || []);
     const [currentInterest, setCurrentInterest] = useState('');
     const [isUploading, setIsUploading] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     const handleAddInterest = () => {
         if (currentInterest.trim() && !interests.includes(currentInterest.trim())) {
@@ -25,22 +28,31 @@ export default function NewChildPage() {
     return (
         <div className="max-w-3xl mx-auto space-y-6">
             {/* Page Header */}
-            <div className="flex items-center gap-4">
-                <Link
-                    href="/admin/children"
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                </Link>
-                <div>
-                    <h1 className="text-3xl font-bold text-foreground">Add New Child</h1>
-                    <p className="text-foreground/60 mt-1">Create a new child profile</p>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <Link
+                        href="/admin/children"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <h1 className="text-3xl font-bold text-foreground">Edit Child</h1>
+                        <p className="text-foreground/60 mt-1">Update child profile</p>
+                    </div>
                 </div>
+                <button
+                    type="button"
+                    onClick={() => setDeleteModal(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                </button>
             </div>
 
             {/* Form */}
-            <form action={createChildAction} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
-                {/* Hidden input for interests JSON */}
+            <form action={updateChildAction.bind(null, child.id)} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
                 <input type="hidden" name="interests" value={JSON.stringify(interests)} />
 
                 {/* Name */}
@@ -53,6 +65,7 @@ export default function NewChildPage() {
                         id="name"
                         name="name"
                         required
+                        defaultValue={child.name}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                         placeholder="Enter child's name"
                     />
@@ -68,6 +81,7 @@ export default function NewChildPage() {
                         id="dob"
                         name="date_of_birth"
                         required
+                        defaultValue={child.date_of_birth}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                     />
                 </div>
@@ -81,6 +95,7 @@ export default function NewChildPage() {
                         id="gender"
                         name="gender"
                         required
+                        defaultValue={child.gender}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                     >
                         <option value="">Select gender</option>
@@ -97,6 +112,7 @@ export default function NewChildPage() {
                     <select
                         id="educational_stage"
                         name="educational_stage"
+                        defaultValue={child.educational_stage || '-'}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                     >
                         <option value="-">-</option>
@@ -161,6 +177,7 @@ export default function NewChildPage() {
                         id="story"
                         name="story"
                         rows={4}
+                        defaultValue={child.story || ''}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
                         placeholder="Tell us about this child..."
                     />
@@ -175,6 +192,7 @@ export default function NewChildPage() {
                         id="bible_verse"
                         name="bible_verse"
                         rows={3}
+                        defaultValue={child.bible_verse || ''}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent resize-none"
                         placeholder="Favorite Bible verse..."
                     />
@@ -183,8 +201,9 @@ export default function NewChildPage() {
                 {/* Photo Upload */}
                 <ImageUpload
                     label="Photo"
-                    name="photo_url"
+                    name="photo_url" // Changed from 'photo' to 'photo_url' to indicate it sends a string
                     folder="children"
+                    currentImage={child.photo_url || undefined}
                     onUploadStatusChange={setIsUploading}
                 />
 
@@ -197,6 +216,7 @@ export default function NewChildPage() {
                         type="date"
                         id="joined_date"
                         name="joined_date"
+                        defaultValue={child.joined_date || ''}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
                     />
                 </div>
@@ -214,10 +234,22 @@ export default function NewChildPage() {
                         disabled={isUploading}
                         className={`px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        {isUploading ? 'Uploading Image...' : 'Create Child'}
+                        {isUploading ? 'Uploading Image...' : 'Save Changes'}
                     </button>
                 </div>
             </form>
+
+            {/* Delete Modal */}
+            <DeleteModal
+                isOpen={deleteModal}
+                onClose={() => setDeleteModal(false)}
+                onConfirm={() => {
+                    deleteChildAction(child.id);
+                    setDeleteModal(false);
+                }}
+                itemName={child.name}
+                itemType="Child"
+            />
         </div>
     );
 }

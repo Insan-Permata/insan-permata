@@ -1,167 +1,94 @@
-'use client'
-
-import { useState } from 'react';
-import { Upload, Trash2, GripVertical } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { getAllCarousels } from '@/lib/repositories/carousels.repository';
+import { deleteCarouselAction } from '@/lib/actions/carousels.actions';
+import CarouselUploadButton from './CarouselUploadButton';
 
-export default function CarouselsPage() {
-    const [backgroundImages, setBackgroundImages] = useState([
-        '/home_bg_photos/1.jpg',
-        '/home_bg_photos/2.jpg',
-        '/home_bg_photos/3.jpg',
-        '/home_bg_photos/4.jpg',
-    ]);
+export const dynamic = 'force-dynamic';
 
-    const [storyImages, setStoryImages] = useState([
-        '/home_story_and_mission_photos/1.jpg',
-        '/home_story_and_mission_photos/2.jpg',
-        '/home_story_and_mission_photos/3.jpg',
-        '/home_story_and_mission_photos/4.jpg',
-        '/home_story_and_mission_photos/5.jpg',
-        '/home_story_and_mission_photos/6.jpg',
-    ]);
-
-    const handleBackgroundUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            // TODO: Implement upload to Supabase Storage
-            console.log('Uploading background images:', files);
-        }
-    };
-
-    const handleStoryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            // TODO: Implement upload to Supabase Storage
-            console.log('Uploading story images:', files);
-        }
-    };
-
-    const handleDeleteBackground = (index: number) => {
-        // TODO: Implement delete from Supabase Storage
-        setBackgroundImages(backgroundImages.filter((_, i) => i !== index));
-    };
-
-    const handleDeleteStory = (index: number) => {
-        // TODO: Implement delete from Supabase Storage
-        setStoryImages(storyImages.filter((_, i) => i !== index));
-    };
+export default async function CarouselsPage() {
+    const carousels = await getAllCarousels();
+    const backgroundImages = carousels.filter(c => c.type === 'background');
+    const storyImages = carousels.filter(c => c.type === 'story');
 
     return (
         <div className="space-y-8">
-            {/* Page Header */}
             <div>
-                <h1 className="text-3xl font-bold text-foreground">Carousel Management</h1>
+                <h1 className="text-3xl font-bold text-foreground">Carousels</h1>
                 <p className="text-foreground/60 mt-1">Manage homepage carousel images</p>
             </div>
 
             {/* Background Carousel Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-xl font-bold text-foreground">Background Carousel</h2>
-                        <p className="text-sm text-foreground/60 mt-1">Hero section background images</p>
-                    </div>
-                    <label className="flex items-center gap-2 bg-brown text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity cursor-pointer font-medium">
-                        <Upload className="w-5 h-5" />
-                        Upload Images
-                        <input
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleBackgroundUpload}
-                        />
-                    </label>
+            <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground">Background Carousel</h2>
+                    <CarouselUploadButton type="background" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {backgroundImages.map((image, index) => (
-                        <div key={index} className="relative group">
-                            <div className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200">
-                                <Image
-                                    src={image}
-                                    alt={`Background ${index + 1}`}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {backgroundImages.map((image) => (
+                        <div key={image.id} className="group relative aspect-video rounded-xl overflow-hidden bg-gray-100">
+                            <Image
+                                src={image.image_url}
+                                alt="Carousel Image"
+                                fill
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <form action={deleteCarouselAction.bind(null, image.id)}>
                                     <button
-                                        type="button"
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-white rounded-lg hover:bg-gray-100"
-                                        title="Reorder"
+                                        type="submit"
+                                        className="p-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
                                     >
-                                        <GripVertical className="w-5 h-5 text-foreground" />
+                                        <Trash2 className="w-5 h-5" />
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteBackground(index)}
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-red-600 rounded-lg hover:bg-red-700"
-                                        title="Delete"
-                                    >
-                                        <Trash2 className="w-5 h-5 text-white" />
-                                    </button>
-                                </div>
+                                </form>
                             </div>
-                            <p className="text-sm text-foreground/60 mt-2 text-center">Image {index + 1}</p>
                         </div>
                     ))}
+                    {backgroundImages.length === 0 && (
+                        <div className="col-span-full py-12 text-center text-foreground/40 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                            No background images. Add some to get started.
+                        </div>
+                    )}
                 </div>
-            </div>
+            </section>
 
             {/* Story Carousel Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-xl font-bold text-foreground">Story & Mission Carousel</h2>
-                        <p className="text-sm text-foreground/60 mt-1">Our Story section images</p>
-                    </div>
-                    <label className="flex items-center gap-2 bg-brown text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity cursor-pointer font-medium">
-                        <Upload className="w-5 h-5" />
-                        Upload Images
-                        <input
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleStoryUpload}
-                        />
-                    </label>
+            <section className="space-y-4 pt-8 border-t border-gray-200">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground">Story Carousel</h2>
+                    <CarouselUploadButton type="story" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {storyImages.map((image, index) => (
-                        <div key={index} className="relative group">
-                            <div className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200">
-                                <Image
-                                    src={image}
-                                    alt={`Story ${index + 1}`}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {storyImages.map((image) => (
+                        <div key={image.id} className="group relative aspect-video rounded-xl overflow-hidden bg-gray-100">
+                            <Image
+                                src={image.image_url}
+                                alt="Story Image"
+                                fill
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <form action={deleteCarouselAction.bind(null, image.id)}>
                                     <button
-                                        type="button"
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-white rounded-lg hover:bg-gray-100"
-                                        title="Reorder"
+                                        type="submit"
+                                        className="p-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
                                     >
-                                        <GripVertical className="w-5 h-5 text-foreground" />
+                                        <Trash2 className="w-5 h-5" />
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteStory(index)}
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-red-600 rounded-lg hover:bg-red-700"
-                                        title="Delete"
-                                    >
-                                        <Trash2 className="w-5 h-5 text-white" />
-                                    </button>
-                                </div>
+                                </form>
                             </div>
-                            <p className="text-sm text-foreground/60 mt-2 text-center">Image {index + 1}</p>
                         </div>
                     ))}
+                    {storyImages.length === 0 && (
+                        <div className="col-span-full py-12 text-center text-foreground/40 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+                            No story images. Add some to get started.
+                        </div>
+                    )}
                 </div>
-            </div>
+            </section>
         </div>
     );
 }
