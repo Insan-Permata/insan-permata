@@ -28,8 +28,10 @@ export async function getCarouselsByType(type: 'background' | 'story') {
     return data;
 }
 
+import { createAdminClient } from '@/lib/utils/supabase/admin';
+
 export async function createCarousel(carousel: NewCarousel) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('carousels')
         .insert(carousel)
@@ -41,7 +43,7 @@ export async function createCarousel(carousel: NewCarousel) {
 }
 
 export async function updateCarousel(id: string, carousel: UpdateCarousel) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('carousels')
         .update(carousel)
@@ -54,7 +56,7 @@ export async function updateCarousel(id: string, carousel: UpdateCarousel) {
 }
 
 export async function deleteCarousel(id: string) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { error } = await supabase
         .from('carousels')
         .delete()

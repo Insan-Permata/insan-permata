@@ -28,8 +28,10 @@ export async function getNewsById(id: string) {
     return data;
 }
 
+import { createAdminClient } from '@/lib/utils/supabase/admin';
+
 export async function createNews(news: NewNews) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('news')
         .insert(news)
@@ -41,7 +43,7 @@ export async function createNews(news: NewNews) {
 }
 
 export async function updateNews(id: string, news: UpdateNews) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
         .from('news')
         .update(news)
@@ -54,7 +56,7 @@ export async function updateNews(id: string, news: UpdateNews) {
 }
 
 export async function deleteNews(id: string) {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { error } = await supabase
         .from('news')
         .delete()
