@@ -7,7 +7,7 @@ import ImageUpload from '../../../(components)/ImageUpload';
 import { createStaffAction } from '@/lib/actions/staff.actions';
 
 export default function NewStaffPage() {
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
@@ -88,8 +88,9 @@ export default function NewStaffPage() {
                 {/* Photo Upload */}
                 <ImageUpload
                     label="Photo"
-                    name="photo"
-                    onImageChange={setPhotoFile}
+                    name="photo_url"
+                    folder="staff"
+                    onUploadStatusChange={setIsUploading}
                 />
 
                 {/* Form Actions */}
@@ -102,9 +103,10 @@ export default function NewStaffPage() {
                     </Link>
                     <button
                         type="submit"
-                        className="px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
+                        disabled={isUploading}
+                        className={`px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Create Staff Member
+                        {isUploading ? 'Uploading Image...' : 'Create Staff'}
                     </button>
                 </div>
             </form>

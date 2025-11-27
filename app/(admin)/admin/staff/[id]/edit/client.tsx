@@ -9,7 +9,7 @@ import { updateStaffAction, deleteStaffAction } from '@/lib/actions/staff.action
 import { Staff } from '@/lib/repositories/staff.repository';
 
 export default function EditStaffClient({ staff }: { staff: Staff }) {
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
     return (
@@ -105,9 +105,10 @@ export default function EditStaffClient({ staff }: { staff: Staff }) {
                 {/* Photo Upload */}
                 <ImageUpload
                     label="Photo"
-                    name="photo"
+                    name="photo_url"
+                    folder="staff"
                     currentImage={staff.photo_url || undefined}
-                    onImageChange={setPhotoFile}
+                    onUploadStatusChange={setIsUploading}
                 />
 
                 {/* Form Actions */}
@@ -120,9 +121,10 @@ export default function EditStaffClient({ staff }: { staff: Staff }) {
                     </Link>
                     <button
                         type="submit"
-                        className="px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
+                        disabled={isUploading}
+                        className={`px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Save Changes
+                        {isUploading ? 'Uploading Image...' : 'Save Changes'}
                     </button>
                 </div>
             </form>

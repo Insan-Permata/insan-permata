@@ -7,7 +7,7 @@ import ImageUpload from '../../../(components)/ImageUpload';
 import { createNewsAction } from '@/lib/actions/news.actions';
 
 export default function NewNewsPage() {
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
@@ -89,8 +89,9 @@ export default function NewNewsPage() {
                 {/* Image Upload */}
                 <ImageUpload
                     label="Featured Image"
-                    name="image"
-                    onImageChange={setImageFile}
+                    name="image_url"
+                    folder="news"
+                    onUploadStatusChange={setIsUploading}
                 />
 
                 {/* Form Actions */}
@@ -103,9 +104,10 @@ export default function NewNewsPage() {
                     </Link>
                     <button
                         type="submit"
-                        className="px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
+                        disabled={isUploading}
+                        className={`px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Publish Article
+                        {isUploading ? 'Uploading Image...' : 'Publish Article'}
                     </button>
                 </div>
             </form>

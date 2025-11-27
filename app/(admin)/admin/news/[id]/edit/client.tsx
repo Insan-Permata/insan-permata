@@ -9,7 +9,7 @@ import { updateNewsAction, deleteNewsAction } from '@/lib/actions/news.actions';
 import { News } from '@/lib/repositories/news.repository';
 
 export default function EditNewsClient({ article }: { article: News }) {
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
     return (
@@ -106,9 +106,10 @@ export default function EditNewsClient({ article }: { article: News }) {
                 {/* Image Upload */}
                 <ImageUpload
                     label="Featured Image"
-                    name="image"
+                    name="image_url"
+                    folder="news"
                     currentImage={article.image_url || undefined}
-                    onImageChange={setImageFile}
+                    onUploadStatusChange={setIsUploading}
                 />
 
                 {/* Form Actions */}
@@ -121,9 +122,10 @@ export default function EditNewsClient({ article }: { article: News }) {
                     </Link>
                     <button
                         type="submit"
-                        className="px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
+                        disabled={isUploading}
+                        className={`px-6 py-2 bg-brown text-white rounded-lg hover:opacity-90 transition-opacity font-medium ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Save Changes
+                        {isUploading ? 'Uploading Image...' : 'Save Changes'}
                     </button>
                 </div>
             </form>

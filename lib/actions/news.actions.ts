@@ -1,7 +1,6 @@
 'use server'
 
 import { createNews, updateNews, deleteNews } from '@/lib/repositories/news.repository';
-import { uploadImage } from '@/lib/utils/supabase/storage';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -10,19 +9,14 @@ export async function createNewsAction(formData: FormData) {
     const excerpt = formData.get('excerpt') as string;
     const content = formData.get('content') as string;
     const author = formData.get('author') as string;
-    const imageFile = formData.get('image') as File; // Note: 'image' not 'photo' for news
-
-    let image_url = null;
-    if (imageFile && imageFile.size > 0) {
-        image_url = await uploadImage(imageFile, 'news');
-    }
+    const image_url = formData.get('image_url') as string;
 
     await createNews({
         title,
         excerpt,
         content,
         author,
-        image_url,
+        image_url: image_url || null,
         published_at: new Date().toISOString(),
     });
 
@@ -35,12 +29,7 @@ export async function updateNewsAction(id: string, formData: FormData) {
     const excerpt = formData.get('excerpt') as string;
     const content = formData.get('content') as string;
     const author = formData.get('author') as string;
-    const imageFile = formData.get('image') as File;
-
-    let image_url = undefined;
-    if (imageFile && imageFile.size > 0) {
-        image_url = await uploadImage(imageFile, 'news');
-    }
+    const image_url = formData.get('image_url') as string;
 
     await updateNews(id, {
         title,

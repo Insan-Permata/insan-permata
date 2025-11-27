@@ -1,7 +1,6 @@
 'use server'
 
 import { createStaff, updateStaff, deleteStaff } from '@/lib/repositories/staff.repository';
-import { uploadImage } from '@/lib/utils/supabase/storage';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -10,19 +9,14 @@ export async function createStaffAction(formData: FormData) {
     const role = formData.get('role') as string;
     const description = formData.get('description') as string;
     const bible_verse = formData.get('bible_verse') as string;
-    const photoFile = formData.get('photo') as File;
-
-    let photo_url = null;
-    if (photoFile && photoFile.size > 0) {
-        photo_url = await uploadImage(photoFile, 'staff');
-    }
+    const photo_url = formData.get('photo_url') as string;
 
     await createStaff({
         name,
         role,
         description,
         bible_verse,
-        photo_url,
+        photo_url: photo_url || null,
     });
 
     revalidatePath('/admin/staff');
@@ -34,12 +28,7 @@ export async function updateStaffAction(id: string, formData: FormData) {
     const role = formData.get('role') as string;
     const description = formData.get('description') as string;
     const bible_verse = formData.get('bible_verse') as string;
-    const photoFile = formData.get('photo') as File;
-
-    let photo_url = undefined;
-    if (photoFile && photoFile.size > 0) {
-        photo_url = await uploadImage(photoFile, 'staff');
-    }
+    const photo_url = formData.get('photo_url') as string;
 
     await updateStaff(id, {
         name,
