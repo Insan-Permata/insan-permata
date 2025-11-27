@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { children } from '@/data/children';
+import { getChildById } from '@/lib/repositories/children.repository';
 import PageHero from '../../(component)/PageHero';
 import Breadcrumbs from '../../(component)/Breadcrumbs';
 
@@ -12,11 +12,19 @@ interface ChildDetailPageProps {
 
 export default async function ChildDetailPage({ params }: ChildDetailPageProps) {
     const { id } = await params;
-    const child = children.find((c) => c.id === id);
+    const child = await getChildById(id);
 
     if (!child) {
         notFound();
     }
+
+    // Format educational stage for display
+    const formatEducationalStage = (stage: string | null) => {
+        if (!stage || stage === '-') return 'Not specified';
+        return stage.split('_').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    };
 
     return (
         <div className="min-h-screen bg-background">
@@ -32,7 +40,7 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                 items={[
                     { label: 'Home', href: '/' },
                     { label: 'Our Children', href: '/our-children' },
-                    { label: child.name, href: `/children/${child.id}` }
+                    { label: child.name, href: `/our-children/${child.id}` }
                 ]}
             />
 
@@ -42,14 +50,20 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                     <div className="md:col-span-1">
                         <div className="sticky top-24">
                             <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-xl">
-                                <Image
-                                    src={child.photoUrl}
-                                    alt={child.name}
-                                    fill
-                                    className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 33vw"
-                                    priority
-                                />
+                                {child.photo_url ? (
+                                    <Image
+                                        src={child.photo_url || ""}
+                                        alt={child.name}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                        priority
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <span className="text-gray-400">No photo available</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -67,43 +81,49 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                                         Educational Stage
                                     </h3>
                                     <p className="text-xl text-foreground font-medium">
-                                        {child.educationalStage}
+                                        {formatEducationalStage(child.educational_stage)}
                                     </p>
                                 </div>
 
-                                <div>
-                                    <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                                        About Me
-                                    </h3>
-                                    <p className="text-lg text-foreground/80 leading-relaxed">
-                                        {child.aboutMe}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                                        Interests
-                                    </h3>
-                                    <div className="flex flex-wrap gap-2 mt-2">
-                                        {child.interests.map((interest, index) => (
-                                            <span
-                                                key={index}
-                                                className="px-4 py-2 bg-off-white text-foreground rounded-full text-sm font-medium"
-                                            >
-                                                {interest}
-                                            </span>
-                                        ))}
+                                {child.story && (
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                            About Me
+                                        </h3>
+                                        <p className="text-lg text-foreground/80 leading-relaxed">
+                                            {child.story}
+                                        </p>
                                     </div>
-                                </div>
+                                )}
 
-                                <div>
-                                    <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                                        Favorite Bible Verse
-                                    </h3>
-                                    <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
-                                        "{child.favoriteBibleVerse}"
-                                    </blockquote>
-                                </div>
+                                {child.interests && child.interests.length > 0 && (
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                            Interests
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {child.interests.map((interest, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="px-4 py-2 bg-off-white text-foreground rounded-full text-sm font-medium"
+                                                >
+                                                    {interest}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {child.bible_verse && (
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                            Favorite Bible Verse
+                                        </h3>
+                                        <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
+                                            "{child.bible_verse}"
+                                        </blockquote>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

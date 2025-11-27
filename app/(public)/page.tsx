@@ -1,30 +1,24 @@
 import BackgroundCarousel from "./(component)/BackgroundCarousel";
 import ImageCarousel from "./(component)/ImageCarousel";
+import { getCarouselsByType } from '@/lib/repositories/carousels.repository';
 
-export default function Home() {
-  const backgroundImages = [
-    '/home_bg_photos/1.jpg',
-    '/home_bg_photos/2.jpg',
-    '/home_bg_photos/3.jpg',
-    '/home_bg_photos/4.jpg',
-  ];
+export default async function Home() {
+  // Fetch real carousel images from database
+  const [backgroundCarousels, storyCarousels] = await Promise.all([
+    getCarouselsByType('background'),
+    getCarouselsByType('story')
+  ]);
 
-  const storyImages = [
-    '/home_story_and_mission_photos/1.jpg',
-    '/home_story_and_mission_photos/2.jpg',
-    '/home_story_and_mission_photos/3.jpg',
-    '/home_story_and_mission_photos/4.jpg',
-    '/home_story_and_mission_photos/5.jpg',
-    '/home_story_and_mission_photos/6.jpg',
-  ];
+  const backgroundImages = backgroundCarousels.map(c => c.image_url);
+  const storyImages = storyCarousels.map(c => c.image_url);
 
   return (
     <div className="relative w-full">
       {/* Hero Section */}
       <div className="relative w-full min-h-screen pt-0">
         {/* Background Carousel - Fixed behind header */}
-        <BackgroundCarousel 
-          images={backgroundImages}
+        <BackgroundCarousel
+          images={backgroundImages.length > 0 ? backgroundImages : ['/placeholder.jpg']}
           interval={5000}
           overlay={true}
           overlayOpacity={0.4}
@@ -36,7 +30,7 @@ export default function Home() {
             Lorem ipsum dolor sit amet consectetur adipiscing elit
           </h1>
           <p className="text-lg md:text-xl font-light text-[#F5F5F3] max-w-2xl leading-relaxed opacity-90 drop-shadow-md">
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
         </div>
@@ -61,8 +55,8 @@ export default function Home() {
 
             {/* Right Side - Image Carousel */}
             <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
-              <ImageCarousel 
-                images={storyImages}
+              <ImageCarousel
+                images={storyImages.length > 0 ? storyImages : ['/placeholder.jpg']}
                 interval={5000}
               />
             </div>

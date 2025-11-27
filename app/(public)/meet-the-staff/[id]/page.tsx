@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import PageHero from '../../(component)/PageHero';
 import Breadcrumbs from '../../(component)/Breadcrumbs';
-import { staffMembers } from '@/data/staff';
+import { getStaffById } from '@/lib/repositories/staff.repository';
 
 interface StaffDetailPageProps {
     params: Promise<{
@@ -12,9 +12,7 @@ interface StaffDetailPageProps {
 
 export default async function StaffDetailPage({ params }: StaffDetailPageProps) {
     const { id } = await params;
-
-    // Find the staff member
-    const staff = staffMembers.find((member) => member.id === id);
+    const staff = await getStaffById(id);
 
     if (!staff) {
         notFound();
@@ -48,32 +46,63 @@ export default async function StaffDetailPage({ params }: StaffDetailPageProps) 
                         <div className="md:col-span-1">
                             <div className="sticky top-24">
                                 <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
-                                    <Image
-                                        src={staff.photoUrl}
-                                        alt={staff.name}
-                                        fill
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                        quality={85}
-                                    />
+                                    {staff.photo_url ? (
+                                        <Image
+                                            src={staff.photo_url}
+                                            alt={staff.name}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            priority
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                            <span className="text-gray-400">No photo available</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
-                        {/* Right Column: Details */}
+                        {/* Right Column: Information */}
                         <div className="md:col-span-2 space-y-8">
-                            {/* Description */}
                             <div className="bg-white rounded-2xl p-8 shadow-sm">
-                                <p className="text-lg text-foreground/80 leading-relaxed">
-                                    {staff.description}
-                                </p>
-                            </div>
+                                <h2 className="text-3xl font-bold text-foreground mb-6 border-b pb-4">
+                                    {staff.name}
+                                </h2>
 
-                            {/* Bible Verse */}
-                            <div className="bg-white rounded-2xl p-8 shadow-sm">
-                                <blockquote className="border-l-4 border-brown pl-6 italic text-foreground/70 text-lg">
-                                    {staff.bibleVerse}
-                                </blockquote>
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                            Role
+                                        </h3>
+                                        <p className="text-xl text-foreground font-medium">
+                                            {staff.role}
+                                        </p>
+                                    </div>
+
+                                    {staff.description && (
+                                        <div>
+                                            <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                                About
+                                            </h3>
+                                            <p className="text-lg text-foreground/80 leading-relaxed">
+                                                {staff.description}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {staff.bible_verse && (
+                                        <div>
+                                            <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                                Favorite Bible Verse
+                                            </h3>
+                                            <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
+                                                "{staff.bible_verse}"
+                                            </blockquote>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

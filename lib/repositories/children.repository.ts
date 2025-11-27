@@ -15,7 +15,7 @@ export async function getAllChildren() {
         .order('name');
 
     if (error) throw error;
-    return data;
+    return data as Child[];
 }
 
 export async function getChildById(id: string) {
@@ -27,7 +27,7 @@ export async function getChildById(id: string) {
         .single();
 
     if (error) throw error;
-    return data;
+    return data as Child;
 }
 
 export async function createChild(child: NewChild) {

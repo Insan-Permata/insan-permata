@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import PageHero from '../../(component)/PageHero';
 import Breadcrumbs from '../../(component)/Breadcrumbs';
-import { newsItems } from '@/data/news';
+import { getNewsById } from '@/lib/repositories/news.repository';
 import { Calendar, User } from 'lucide-react';
 
 interface NewsDetailPageProps {
@@ -12,16 +12,14 @@ interface NewsDetailPageProps {
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     const { id } = await params;
-
-    // Find the news item
-    const newsItem = newsItems.find((item) => item.id === id);
+    const newsItem = await getNewsById(id);
 
     if (!newsItem) {
         notFound();
     }
 
     // Format date
-    const formattedDate = newsItem.date.toLocaleDateString('en-US', {
+    const formattedDate = new Date(newsItem.published_at).toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         year: 'numeric',
@@ -31,7 +29,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
         <div className="min-h-screen bg-background">
             {/* Hero Section */}
             <PageHero
-                imageSrc={newsItem.imageUrl}
+                imageSrc={newsItem.image_url || '/news_bg_photos/2.jpg'}
                 imageAlt={newsItem.title}
                 title={newsItem.title}
                 height="40vh"
@@ -58,11 +56,20 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                         </div>
                         <div className="flex items-center gap-2 text-foreground/70">
                             <Calendar className="w-5 h-5" />
-                            <time dateTime={newsItem.date.toISOString()}>
+                            <time dateTime={newsItem.published_at}>
                                 {formattedDate}
                             </time>
                         </div>
                     </div>
+
+                    {/* Excerpt */}
+                    {newsItem.excerpt && (
+                        <div className="mb-8 p-6 bg-gray-50 rounded-lg border-l-4 border-brown">
+                            <p className="text-lg text-foreground/80 italic">
+                                {newsItem.excerpt}
+                            </p>
+                        </div>
+                    )}
 
                     {/* Article Body */}
                     <div
@@ -73,8 +80,10 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
               prose-ul:my-6 prose-li:text-foreground/80 prose-li:mb-2
               prose-strong:text-foreground prose-strong:font-semibold
               prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8 prose-img:w-full"
-                        dangerouslySetInnerHTML={{ __html: newsItem.content || '' }}
-                    />
+                        style={{ whiteSpace: 'pre-wrap' }}
+                    >
+                        {newsItem.content}
+                    </div>
                 </div>
             </article>
         </div>
