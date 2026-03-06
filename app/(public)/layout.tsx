@@ -7,11 +7,10 @@ export default function PublicLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div >
+        <div>
             <HeaderComponent />
             {children}
             <FooterComponent />
-
         </div>
     );
 }

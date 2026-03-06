@@ -36,14 +36,15 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     // Protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
+    if (request.nextUrl.pathname.startsWith('/admin') && !user &&
+        !request.nextUrl.pathname.startsWith('/admin/login')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/login'
+        url.pathname = '/admin/login'
         return NextResponse.redirect(url)
     }
 
     if (user) {
-        if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname === '/login') {
+        if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname === '/admin/login') {
             const url = request.nextUrl.clone()
             url.pathname = '/admin/dashboard'
             return NextResponse.redirect(url)

@@ -27,11 +27,9 @@ export default async function Home() {
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-[#F5F5F3] mb-6 max-w-4xl leading-tight drop-shadow-lg">
-            Lorem ipsum dolor sit amet consectetur adipiscing elit
-          </h1>
+            A Home for God’s Treasured Children</h1>
           <p className="text-lg md:text-xl font-light text-[#F5F5F3] max-w-2xl leading-relaxed opacity-90 drop-shadow-md">
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Ephesians 2:10 -  "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
           </p>
         </div>
       </div>

@@ -105,10 +105,14 @@ export default function SupportPage() {
         {/* Donation Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-[#292826] text-center mb-4">
-            Make Your Donation
+            Join the Story God Is Writing
           </h2>
           <p className="text-center text-[#292826] opacity-70 mb-8">
-            Every contribution helps us provide a better future for the children
+            As part of our commitment to transparency and relationship, donors receive secure access to our private supporter page.
+
+            Inside, you can follow updates, stories, and reports about the children and staff of Insan Permata.
+
+            Login details will be emailed to you after your donation is received.
           </p>
 
           {/* Donation Card */}
