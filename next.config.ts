@@ -1,11 +1,19 @@
 import type { NextConfig } from "next";
 
-const supabaseStorageUrl = process.env.SUPABASE_STORAGE_BUCKET_URL_PREFIX
+const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : null;
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: supabaseStorageUrl
-      ? [new URL(supabaseStorageUrl + "/**")]
+    remotePatterns: supabaseHostname
+      ? [
+        {
+          protocol: 'https',
+          hostname: supabaseHostname,
+          pathname: '/**',
+        },
+      ]
       : [],
     formats: ['image/avif', 'image/webp'],
     qualities: [25, 50, 75],
