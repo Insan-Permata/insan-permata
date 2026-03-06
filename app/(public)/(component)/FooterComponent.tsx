@@ -3,12 +3,12 @@
 import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
 
 export default function FooterComponent() {
-    const currentYear = new Date().getFullYear();
-    const copyrightText = `© ${currentYear} Insan Permata. Made with love for the children we serve.`;
-    const facebookUrl = 'https://facebook.com';
-    const instagramUrl = 'https://instagram.com';
-    const phoneNumber = '+62 812 3456 7890';
-    const email = 'info@insanpermata.org';
+  const currentYear = new Date().getFullYear();
+  const copyrightText = `© ${currentYear} Insan Permata`;
+  const facebookUrl = 'https://facebook.com';
+  const instagramUrl = 'https://instagram.com';
+  const phoneNumber = '+62 812 3456 7890';
+  const email = 'info@insanpermata.org';
 
   return (
     <footer className="relative z-10 bg-[#F1F0EE] py-12 md:py-16">
@@ -20,37 +20,37 @@ export default function FooterComponent() {
               <span className="font-semibold text-lg text-[#292826]">Insan Permata</span>
             </div>
             <p className="text-sm text-[#292826] leading-relaxed max-w-md opacity-90">
-              Creating a warm, nurturing environment where every child feels safe, loved, and hopeful for the future.
+              Ephesians 2:10 - "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
             </p>
           </div>
 
           {/* Contact & Social */}
           <div>
             <h3 className="font-semibold text-sm text-[#292826] mb-4">Connect With Us</h3>
-            
+
             {/* Contact Info */}
             <ul className="space-y-3 mb-6">
               <li className="flex items-center gap-2 text-sm text-[#292826] opacity-90">
-                <Phone className="h-4 w-4 text-[#8E521E]" />
+                <Phone className="h-4 w-4 text-[#355872]" />
                 <span>{phoneNumber}</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-[#292826] opacity-90">
-                <Mail className="h-4 w-4 text-[#8E521E]" />
+                <Mail className="h-4 w-4 text-[#355872]" />
                 <span>{email}</span>
               </li>
             </ul>
 
             {/* Social Media */}
             <div className="flex items-center gap-3">
-              <button 
-                className="h-9 w-9 rounded-md bg-[#8E521E] flex items-center justify-center hover:bg-[#6d3e17] transition-colors duration-200"
+              <button
+                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
                 onClick={() => window.open(facebookUrl, '_blank')}
                 aria-label="Visit our Facebook page"
               >
                 <Facebook className="h-4 w-4 text-[#F5F5F3]" />
               </button>
-              <button 
-                className="h-9 w-9 rounded-md bg-[#8E521E] flex items-center justify-center hover:bg-[#6d3e17] transition-colors duration-200"
+              <button
+                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
                 onClick={() => window.open(instagramUrl, '_blank')}
                 aria-label="Visit our Instagram page"
               >
