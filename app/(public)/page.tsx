@@ -1,3 +1,4 @@
+import Link from "next/link";
 import BackgroundCarousel from "./(component)/BackgroundCarousel";
 import ImageCarousel from "./(component)/ImageCarousel";
 import { getCarouselsByType } from '@/lib/repositories/carousels.repository';
@@ -21,7 +22,7 @@ export default async function Home() {
           images={backgroundImages.length > 0 ? backgroundImages : ['/placeholder.jpg']}
           interval={5000}
           overlay={true}
-          overlayOpacity={0.4}
+          overlayOpacity={0.6}
         />
 
         {/* Hero Content */}
@@ -31,6 +32,12 @@ export default async function Home() {
           <p className="text-lg md:text-xl font-light text-[#F5F5F3] max-w-2xl leading-relaxed opacity-90 drop-shadow-md">
             Ephesians 2:10 -  "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
           </p>
+          <Link
+            href="/support"
+            className="mt-8 inline-block px-8 py-3 border-2 border-[#F5F5F3] text-[#F5F5F3] font-semibold rounded-full hover:bg-[#355872] hover:text-[#F5F5F3] hover:border-[#355872] transition-all duration-300 drop-shadow-md"
+          >
+            Support Our Mission
+          </Link>
         </div>
       </div>
 
