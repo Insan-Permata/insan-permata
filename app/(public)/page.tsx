@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import BackgroundCarousel from "./(component)/BackgroundCarousel";
 import ImageCarousel from "./(component)/ImageCarousel";
 import { getCarouselsByType } from '@/lib/repositories/carousels.repository';
@@ -51,18 +52,20 @@ export default async function Home() {
                 Our Story & Mission
               </h2>
               <p className="text-base md:text-lg text-[#292826] leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                For over 20 years, Insan Permata has been more than just a shelter; it has been a sanctuary where every child is seen as a divine masterpiece. Guided by our faith, we provide a loving and stable environment where children can heal, grow, and discover the "good works" God has prepared for them.
               </p>
               <p className="text-base md:text-lg text-[#292826] leading-relaxed">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+                We are committed to empowering these young lives to become compassionate leaders who will shape the future of Indonesia with purpose and hope.
               </p>
             </div>
 
             {/* Right Side - Image Carousel */}
             <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
-              <ImageCarousel
-                images={storyImages.length > 0 ? storyImages : ['/placeholder.jpg']}
-                interval={5000}
+              <Image
+                src="/indonesia map.png"
+                alt="Indonesia Map"
+                fill
+                className="object-contain"
               />
             </div>
           </div>
