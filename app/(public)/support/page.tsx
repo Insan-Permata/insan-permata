@@ -8,8 +8,21 @@ export default function SupportPage() {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(25);
   const [customAmount, setCustomAmount] = useState<string>('25');
   const [amountError, setAmountError] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
 
   const presetAmounts = [10, 25, 100];
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (!value) {
+      setEmailError('Email is required');
+    } else if (!/\S+@\S+\.\S+/.test(value)) {
+      setEmailError('Please enter a valid email address');
+    } else {
+      setEmailError('');
+    }
+  };
 
   const handleAmountSelect = (amount: number) => {
     setSelectedAmount(amount);
@@ -34,6 +47,11 @@ export default function SupportPage() {
 
     if (!amount || amount < 5) {
       setAmountError('Please enter a valid amount (minimum $5.00)');
+      return;
+    }
+
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setEmailError('Please enter a valid email address');
       return;
     }
 
@@ -138,7 +156,7 @@ export default function SupportPage() {
                 Monthly
                 {donationType === 'monthly' && (
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="   M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
                 )}
               </button>
@@ -210,10 +228,41 @@ export default function SupportPage() {
               )}
             </div>
 
+            {/* Email Address Input */}
+            <div className="mb-6">
+              <label htmlFor="email" className="block text-sm font-medium text-[#292826] opacity-70 mb-2">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <div className={`relative border-2 rounded-xl overflow-hidden transition-all ${email && !emailError
+                ? 'border-[#355872] ring-2 ring-[#355872] ring-offset-2'
+                : emailError
+                  ? 'border-red-500'
+                  : 'border-gray-200'
+                }`}>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => handleEmailChange(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-4 text-lg font-semibold text-[#292826] outline-none bg-transparent"
+                  required
+                />
+              </div>
+              {emailError && (
+                <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>{emailError}</span>
+                </div>
+              )}
+            </div>
+
             {/* Donate Button */}
             <button
               onClick={handleDonation}
-              disabled={(!selectedAmount && !customAmount) || !!amountError}
+              disabled={(!selectedAmount && !customAmount) || !!amountError || !email || !!emailError}
               className="w-full bg-[#355872] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#7AAACE] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {donationType === 'monthly' ? 'Donate Monthly' : 'Donate Now'}
