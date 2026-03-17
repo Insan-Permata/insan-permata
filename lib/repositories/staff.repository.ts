@@ -28,10 +28,8 @@ export async function getStaffById(id: string) {
     return data;
 }
 
-import { createAdminClient } from '@/lib/utils/supabase/admin';
-
 export async function createStaff(staff: NewStaff) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from('staff')
         .insert(staff)
@@ -43,7 +41,7 @@ export async function createStaff(staff: NewStaff) {
 }
 
 export async function updateStaff(id: string, staff: UpdateStaff) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from('staff')
         .update(staff)
@@ -56,7 +54,7 @@ export async function updateStaff(id: string, staff: UpdateStaff) {
 }
 
 export async function deleteStaff(id: string) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { error } = await supabase
         .from('staff')
         .delete()

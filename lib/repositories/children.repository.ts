@@ -1,6 +1,4 @@
 import { createClient } from '@/lib/utils/supabase/server';
-import { createAdminClient } from '@/lib/utils/supabase/admin';
-
 import { Database } from '@/types/database';
 
 export type Child = Database['public']['Tables']['children']['Row'];
@@ -31,7 +29,7 @@ export async function getChildById(id: string) {
 }
 
 export async function createChild(child: NewChild) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from('children')
         .insert(child)
@@ -43,7 +41,7 @@ export async function createChild(child: NewChild) {
 }
 
 export async function updateChild(id: string, child: UpdateChild) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from('children')
         .update(child)
@@ -56,7 +54,7 @@ export async function updateChild(id: string, child: UpdateChild) {
 }
 
 export async function deleteChild(id: string) {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { error } = await supabase
         .from('children')
         .delete()
