@@ -26,6 +26,21 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
         ).join(' ');
     };
 
+    // Calculate age from date of birth
+    const calculateAge = (dob: string | null) => {
+        if (!dob) return null;
+        const birth = new Date(dob);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+    const age = calculateAge(child.date_of_birth);
+
     return (
         <div className="min-h-screen bg-background">
             <PageHero
@@ -85,6 +100,17 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                                     </p>
                                 </div>
 
+                                {age !== null && (
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                                            Age
+                                        </h3>
+                                        <p className="text-xl text-foreground font-medium">
+                                            {age} years old
+                                        </p>
+                                    </div>
+                                )}
+
                                 {child.story && (
                                     <div>
                                         <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
@@ -120,7 +146,7 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                                             Favorite Bible Verse
                                         </h3>
                                         <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
-                                            "{child.bible_verse}"
+                                            {child.bible_verse}
                                         </blockquote>
                                     </div>
                                 )}
@@ -129,6 +155,15 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                     </div>
                 </div>
             </div>
+
+            {/* Last updated note */}
+            {child.updated_at && (
+                <p className="text-center text-xs text-foreground/40 pb-10">
+                    Last updated {new Date(child.updated_at).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                </p>
+            )}
         </div>
     );
 }

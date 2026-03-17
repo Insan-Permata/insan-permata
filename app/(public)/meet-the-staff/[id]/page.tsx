@@ -98,7 +98,7 @@ export default async function StaffDetailPage({ params }: StaffDetailPageProps) 
                                                 Favorite Bible Verse
                                             </h3>
                                             <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
-                                                "{staff.bible_verse}"
+                                                {staff.bible_verse}
                                             </blockquote>
                                         </div>
                                     )}
@@ -108,6 +108,15 @@ export default async function StaffDetailPage({ params }: StaffDetailPageProps) 
                     </div>
                 </div>
             </section>
+
+            {/* Last updated note */}
+            {staff.updated_at && (
+                <p className="text-center text-xs text-foreground/40 pb-10">
+                    Last updated {new Date(staff.updated_at).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                </p>
+            )}
         </div>
     );
 }
