@@ -10,6 +10,8 @@ export default function SupportPage() {
   const [amountError, setAmountError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string>('');
 
   const presetAmounts = [10, 25, 100];
 
@@ -42,7 +44,7 @@ export default function SupportPage() {
     }
   };
 
-  const handleDonation = () => {
+  const handleDonation = async () => {
     const amount = selectedAmount || parseFloat(customAmount);
 
     if (!amount || amount < 5) {
@@ -55,29 +57,30 @@ export default function SupportPage() {
       return;
     }
 
-    // TODO: Replace with your actual Stripe Payment Links or Checkout Session URLs
-    // You'll need separate links for one-time vs monthly donations
-    const stripeLinks = {
-      once: {
-        10: 'https://donate.stripe.com/your-10-once-link',
-        25: 'https://donate.stripe.com/your-25-once-link',
-        100: 'https://donate.stripe.com/your-100-once-link',
-        custom: 'https://donate.stripe.com/your-custom-once-link',
-      },
-      monthly: {
-        10: 'https://donate.stripe.com/your-10-monthly-link',
-        25: 'https://donate.stripe.com/your-25-monthly-link',
-        100: 'https://donate.stripe.com/your-100-monthly-link',
-        custom: 'https://donate.stripe.com/your-custom-monthly-link',
-      },
-    };
+    setIsLoading(true);
+    setServerError('');
 
-    // Redirect to Stripe payment page
-    const link = selectedAmount
-      ? stripeLinks[donationType][selectedAmount as keyof typeof stripeLinks.once]
-      : stripeLinks[donationType].custom;
+    try {
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, amount, type: donationType }),
+      });
 
-    window.location.href = link;
+      const data = await response.json();
+
+      if (!response.ok) {
+        setServerError(data.error || 'Something went wrong. Please try again.');
+        return;
+      }
+
+      // Redirect to Stripe Checkout — this leaves our site
+      window.location.href = data.url;
+    } catch {
+      setServerError('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -259,13 +262,33 @@ export default function SupportPage() {
               )}
             </div>
 
+            {/* Server Error */}
+            {serverError && (
+              <div className="flex items-center gap-2 mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>{serverError}</span>
+              </div>
+            )}
+
             {/* Donate Button */}
             <button
               onClick={handleDonation}
-              disabled={(!selectedAmount && !customAmount) || !!amountError || !email || !!emailError}
-              className="w-full bg-[#355872] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#7AAACE] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || (!selectedAmount && !customAmount) || !!amountError || !email || !!emailError}
+              className="w-full bg-[#355872] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#7AAACE] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {donationType === 'monthly' ? 'Donate Monthly' : 'Donate Now'}
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Redirecting to Stripe...
+                </>
+              ) : (
+                donationType === 'monthly' ? 'Donate Monthly' : 'Donate Now'
+              )}
             </button>
 
             {/* Info Text */}
