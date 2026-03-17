@@ -3,39 +3,65 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, LogIn, LogOut } from "lucide-react";
+import { Menu, X, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { createBrowserClient } from "@supabase/ssr";
+import { UserRole } from "@/types/users";
 
-// ─────────────────────────────────────────────────────────────
-// Frontend-only auth helpers
-// Replace these stubs with real logic when the backend is ready.
-// ─────────────────────────────────────────────────────────────
+// Links visible to everyone
+const PUBLIC_NAV_LINKS = [
+  { href: "/support", label: "How to Support" },
+  { href: "/contact", label: "Contact" },
+];
 
-/** Check whether the user is currently logged in. */
-function checkIsLoggedIn(): boolean {
-  // TODO: Replace with a real session/cookie check.
-  if (typeof window === "undefined") return false;
-  return sessionStorage.getItem("user_logged_in") === "true";
-}
-
-/** Sign the user out. */
-async function signOut(): Promise<void> {
-  // TODO: Call your real logout API/server action here.
-  sessionStorage.removeItem("user_logged_in");
-}
-
-// ─────────────────────────────────────────────────────────────
+// Links only shown when the user is logged in
+const MEMBER_NAV_LINKS = [
+  { href: "/our-children", label: "Our Children" },
+  { href: "/news", label: "News" },
+  { href: "/meet-the-staff", label: "Meet the Staff" },
+];
 
 export default function HeaderComponent() {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
-  // Sync auth state on mount and whenever the route changes
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
+  const fetchUserRole = async (userId: string) => {
+    const { data } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+    setIsAdmin((data?.role as UserRole) === "admin");
+  };
+
   useEffect(() => {
-    setIsLoggedIn(checkIsLoggedIn());
-  }, [pathname]);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+      if (session?.user) fetchUserRole(session.user.id);
+    });
+
+    // Listen for login/logout events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session);
+      if (session?.user) {
+        fetchUserRole(session.user.id);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -44,19 +70,36 @@ export default function HeaderComponent() {
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
-    await signOut();
+    await supabase.auth.signOut();
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setIsSigningOut(false);
     router.push("/");
+    router.refresh();
   };
 
-  const navLinks = [
-    { href: "/our-children", label: "Our Children" },
-    { href: "/news", label: "News" },
-    { href: "/support", label: "How to Support" },
-    { href: "/meet-the-staff", label: "Meet the Staff" },
-    { href: "/contact", label: "Contact" },
-  ];
+  const navLinks = isLoggedIn
+    ? [...PUBLIC_NAV_LINKS, ...MEMBER_NAV_LINKS]
+    : PUBLIC_NAV_LINKS;
+
+  const NavLink = ({ href, label }: { href: string; label: string }) => {
+    const isActive = pathname === href || pathname.startsWith(href + "/");
+    return (
+      <Link
+        href={href}
+        className={`relative text-base font-medium transition-colors duration-300 py-2 group ${
+          isActive ? "text-brown" : "text-foreground hover:text-brown"
+        }`}
+      >
+        {label}
+        <span
+          className={`absolute bottom-0 left-0 h-0.5 bg-brown transition-all duration-300 ease-out ${
+            isActive ? "w-full" : "w-0 group-hover:w-full"
+          }`}
+        />
+      </Link>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-gray-100">
@@ -72,29 +115,26 @@ export default function HeaderComponent() {
 
           {/* Desktop Navigation */}
           <ul className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={`relative text-base font-medium transition-colors duration-300 py-2 group ${isActive
-                        ? "text-brown"
-                        : "text-foreground hover:text-brown"
-                      }`}
-                  >
-                    {link.label}
-                    {/* Animated underline */}
-                    <span
-                      className={`absolute bottom-0 left-0 h-0.5 bg-brown transition-all duration-300 ease-out ${isActive ? "w-full" : "w-0 group-hover:w-full"
-                        }`}
-                    />
-                  </Link>
-                </li>
-              );
-            })}
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <NavLink href={link.href} label={link.label} />
+              </li>
+            ))}
 
-            {/* ── Login / Logout ── */}
+            {/* Admin Dashboard button (only for admins) */}
+            {isAdmin && (
+              <li>
+                <Link
+                  href="/admin/dashboard"
+                  className="flex items-center gap-1.5 text-base font-medium text-foreground hover:text-brown transition-colors duration-300"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </Link>
+              </li>
+            )}
+
+            {/* Login / Logout */}
             {isLoggedIn ? (
               <li>
                 <button
@@ -131,29 +171,42 @@ export default function HeaderComponent() {
 
         {/* Mobile Navigation Dropdown */}
         <div
-          className={`absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg md:hidden transition-all duration-300 ease-in-out origin-top ${isMobileMenuOpen
+          className={`absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg md:hidden transition-all duration-300 ease-in-out origin-top ${
+            isMobileMenuOpen
               ? "opacity-100 scale-y-100 visible"
               : "opacity-0 scale-y-0 invisible"
-            }`}
+          }`}
         >
           <div className="flex flex-col px-6 py-4 space-y-2">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-lg font-medium py-3 border-b border-gray-50 last:border-0 transition-colors ${isActive
+                  className={`text-lg font-medium py-3 border-b border-gray-50 last:border-0 transition-colors ${
+                    isActive
                       ? "text-brown pl-2"
                       : "text-foreground hover:text-brown hover:pl-2"
-                    }`}
+                  }`}
                 >
                   {link.label}
                 </Link>
               );
             })}
 
-            {/* ── Mobile Login / Logout ── */}
+            {/* Admin Dashboard (mobile) */}
+            {isAdmin && (
+              <Link
+                href="/admin/dashboard"
+                className="flex items-center gap-2 text-lg font-medium py-3 border-b border-gray-50 text-foreground hover:text-brown hover:pl-2 transition-colors"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
+              </Link>
+            )}
+
+            {/* Mobile Login / Logout */}
             {isLoggedIn ? (
               <button
                 onClick={handleSignOut}

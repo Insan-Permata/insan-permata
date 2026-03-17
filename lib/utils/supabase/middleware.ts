@@ -1,6 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// Routes that require the user to be logged in (but are not admin-only)
+const PROTECTED_PUBLIC_ROUTES = ['/our-children', '/news', '/meet-the-staff']
+
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
         request,
@@ -35,20 +38,30 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
-    // Protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin') && !user &&
-        !request.nextUrl.pathname.startsWith('/admin/login')) {
+    const { pathname } = request.nextUrl
+
+    // Protect /admin routes — redirect to /admin/login if not authenticated
+    if (pathname.startsWith('/admin') && !user && !pathname.startsWith('/admin/login')) {
         const url = request.nextUrl.clone()
         url.pathname = '/admin/login'
         return NextResponse.redirect(url)
     }
 
-    if (user) {
-        if (request.nextUrl.pathname === '/admin' || request.nextUrl.pathname === '/admin/login') {
-            const url = request.nextUrl.clone()
-            url.pathname = '/admin/dashboard'
-            return NextResponse.redirect(url)
-        }
+    // Redirect logged-in users away from the admin login page
+    if (user && (pathname === '/admin' || pathname === '/admin/login')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/dashboard'
+        return NextResponse.redirect(url)
+    }
+
+    // Protect member-only public routes — redirect to /unauthorized if not authenticated
+    const isProtectedRoute = PROTECTED_PUBLIC_ROUTES.some(
+        (route) => pathname === route || pathname.startsWith(route + '/')
+    )
+    if (isProtectedRoute && !user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/unauthorized'
+        return NextResponse.redirect(url)
     }
 
     return supabaseResponse

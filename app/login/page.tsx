@@ -1,36 +1,26 @@
 'use client'
 
-import Link from 'next/link'
+import { login } from '@/lib/actions/auth.actions'
 import { useState } from 'react'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
+import Link from 'next/link'
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-        const username = formData.get('username') as string
-        const password = formData.get('password') as string
-
+    const handleSubmit = async (formData: FormData) => {
         setIsLoading(true)
         setError(null)
 
-        try {
-            // TODO: Replace this with a real login call.
-            // Example:
-            //   const result = await userLogin(username, password)
-            //   if (result?.error) { setError(result.error); return; }
-            //   router.push('/')
-            await new Promise((r) => setTimeout(r, 600)) // stub delay
-            console.log('Login stub called with:', { username, password })
-        } catch {
-            setError('Something went wrong. Please try again.')
-        } finally {
+        const result = await login(formData)
+
+        if (result?.error) {
+            setError(result.error)
             setIsLoading(false)
         }
+        // If successful, the server action will redirect
     }
 
     return (
@@ -57,29 +47,29 @@ export default function LoginPage() {
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form action={handleSubmit} className="space-y-5">
                             {error && (
                                 <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center font-medium border border-red-100">
                                     {error}
                                 </div>
                             )}
 
-                            {/* Username */}
+                            {/* Email */}
                             <div>
                                 <label
-                                    htmlFor="username"
+                                    htmlFor="email"
                                     className="block text-sm font-medium text-foreground mb-1.5"
                                 >
-                                    Username
+                                    Email Address
                                 </label>
                                 <input
-                                    id="username"
-                                    name="username"
-                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    type="email"
                                     required
-                                    autoComplete="username"
+                                    autoComplete="email"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent transition-all outline-none text-sm"
-                                    placeholder="Enter your username"
+                                    placeholder="you@example.com"
                                 />
                             </div>
 
@@ -99,7 +89,7 @@ export default function LoginPage() {
                                         required
                                         autoComplete="current-password"
                                         className="w-full px-4 py-3 pr-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent transition-all outline-none text-sm"
-                                        placeholder="Enter your password"
+                                        placeholder="••••••••"
                                     />
                                     <button
                                         type="button"
@@ -137,19 +127,11 @@ export default function LoginPage() {
                         <p className="text-center text-sm text-foreground/50 mt-6">
                             Don&apos;t have an account?{' '}
                             <span className="text-foreground/50 cursor-not-allowed">
-                                {/* TODO: link to registration page when ready */}
                                 Contact us
                             </span>
                         </p>
                     </div>
                 </div>
-
-                <p className="text-center text-xs text-foreground/40 mt-4">
-                    Are you an admin?{' '}
-                    <Link href="/admin/login" className="text-brown hover:underline">
-                        Admin login →
-                    </Link>
-                </p>
             </div>
         </div>
     )
