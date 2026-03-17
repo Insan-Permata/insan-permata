@@ -40,15 +40,15 @@ export async function updateSession(request: NextRequest) {
 
     const { pathname } = request.nextUrl
 
-    // Protect /admin routes — redirect to /admin/login if not authenticated
-    if (pathname.startsWith('/admin') && !user && !pathname.startsWith('/admin/login')) {
+    // Protect /admin routes — redirect to /login if not authenticated
+    if (pathname.startsWith('/admin') && !user && !pathname.startsWith('/login')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/admin/login'
+        url.pathname = '/login'
         return NextResponse.redirect(url)
     }
 
-    // Redirect logged-in users away from the admin login page
-    if (user && (pathname === '/admin' || pathname === '/admin/login')) {
+    // Redirect logged-in users away from the login page if they hit /admin directly
+    if (user && pathname === '/admin') {
         const url = request.nextUrl.clone()
         url.pathname = '/admin/dashboard'
         return NextResponse.redirect(url)
