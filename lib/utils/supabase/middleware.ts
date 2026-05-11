@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Routes that require the user to be logged in (but are not admin-only)
-const PROTECTED_PUBLIC_ROUTES = ['/our-children', '/news', '/meet-the-staff', '/my-account']
+const PROTECTED_PUBLIC_ROUTES = ['/our-children', '/news', '/meet-the-staff', '/my-account', '/welcome']
 
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({

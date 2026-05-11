@@ -10,15 +10,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 /**
- * Invite a donor to create an account if they don't already have one.
+ * Invite a donor to create an account, or resend the invite if they were
+ * previously invited but never accepted.
  *
  * Three states:
  *   - confirmed user → already has an active account; do nothing
- *   - exists but unconfirmed → previously invited; do not re-send (they have the
- *     original invite email; re-sending would invalidate links anyway)
+ *   - exists but unconfirmed → delete the stale auth row (invalidates the old
+ *     token) and re-invite, so they get a fresh working link
  *   - no row → send a fresh invite
  *
- * Lookups use public.users, which is kept in sync with auth.users by triggers
+ * Lookups use public.users, kept in sync with auth.users by triggers
  * (see add_email_confirmed_to_users.sql). Failures are logged but never fail
  * the webhook — the donation row is the source of truth.
  */
@@ -40,13 +41,23 @@ async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
         // Active account — no invite needed
         return
     }
+
+    // Invite link → Supabase verifies token → /auth/callback exchanges code for a
+    // session → /welcome lets the donor set their password → /my-account.
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const redirectTo = `${siteUrl}/auth/callback?next=/welcome`
+
     if (existing) {
-        // Previously invited but never accepted — leave the original invite in place
-        console.log(`[Webhook] ${normalized} previously invited; skipping re-invite`)
-        return
+        // Previously invited but never accepted — delete the stale auth row so
+        // we can issue a brand-new invite. public.users cascades via FK.
+        const { error: deleteError } = await supabase.auth.admin.deleteUser(existing.id)
+        if (deleteError) {
+            console.error(`[Webhook] Failed to clear stale invite for ${normalized}:`, deleteError)
+            return
+        }
+        console.log(`[Webhook] Cleared stale invite for ${normalized}; re-inviting`)
     }
 
-    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/my-account`
     const { error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
         normalized,
         { redirectTo }
@@ -57,7 +68,7 @@ async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
         return
     }
 
-    console.log(`[Webhook] Sent account invite to ${normalized}`)
+    console.log(`[Webhook] ${existing ? 'Re-sent' : 'Sent'} account invite to ${normalized}`)
 }
 
 export async function POST(request: NextRequest) {

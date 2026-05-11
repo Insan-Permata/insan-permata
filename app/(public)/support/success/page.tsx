@@ -108,17 +108,19 @@ export default async function DonationSuccessPage({
 
                 {state === 'pending' && (
                     <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10 text-left flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                            <MailOpen className="w-5 h-5 text-amber-700" />
+                        <div className="w-10 h-10 rounded-full bg-[#355872]/10 flex items-center justify-center flex-shrink-0">
+                            <MailOpen className="w-5 h-5 text-[#355872]" />
                         </div>
                         <div>
                             <p className="font-semibold text-[#292826] mb-1">
-                                Check your inbox for your invitation
+                                We&apos;ve sent you a fresh invitation
                             </p>
                             <p className="text-sm text-[#292826] opacity-70 leading-relaxed">
-                                We previously sent an invitation to <span className="font-medium">{email}</span>.
-                                Open it to finish setting up your account — once you&apos;re in, you&apos;ll
-                                see this donation and any future contributions in your history.
+                                It looks like you hadn&apos;t finished setting up your account yet,
+                                so we&apos;ve emailed a new invitation to <span className="font-medium">{email}</span>.
+                                Any earlier invitation link is no longer valid &mdash; please use this
+                                latest one. Once you set your password you&apos;ll see this donation
+                                in your history.
                             </p>
                         </div>
                     </div>
