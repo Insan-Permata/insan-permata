@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogIn, LogOut, LayoutDashboard, UserCircle } from "lucide-react";
 import { createBrowserClient } from "@supabase/ssr";
 import { UserRole } from "@/types/users";
 
@@ -121,6 +121,23 @@ export default function HeaderComponent() {
               </li>
             ))}
 
+            {/* My Account button (only for logged-in non-admin users) */}
+            {isLoggedIn && !isAdmin && (
+              <li>
+                <Link
+                  href="/my-account"
+                  className={`flex items-center gap-1.5 text-base font-medium transition-colors duration-300 ${
+                    pathname === "/my-account" || pathname.startsWith("/my-account/")
+                      ? "text-brown"
+                      : "text-foreground hover:text-brown"
+                  }`}
+                >
+                  <UserCircle className="w-4 h-4" />
+                  My Account
+                </Link>
+              </li>
+            )}
+
             {/* Admin Dashboard button (only for admins) */}
             {isAdmin && (
               <li>
@@ -194,6 +211,21 @@ export default function HeaderComponent() {
                 </Link>
               );
             })}
+
+            {/* My Account (mobile, non-admin only) */}
+            {isLoggedIn && !isAdmin && (
+              <Link
+                href="/my-account"
+                className={`flex items-center gap-2 text-lg font-medium py-3 border-b border-gray-50 transition-colors ${
+                  pathname === "/my-account" || pathname.startsWith("/my-account/")
+                    ? "text-brown pl-2"
+                    : "text-foreground hover:text-brown hover:pl-2"
+                }`}
+              >
+                <UserCircle className="w-4 h-4" />
+                My Account
+              </Link>
+            )}
 
             {/* Admin Dashboard (mobile) */}
             {isAdmin && (

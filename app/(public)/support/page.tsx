@@ -416,7 +416,7 @@ export default function SupportPage() {
         </div>
 
         {/* FAQ Section */}
-        {/* <div className="bg-white rounded-lg p-8 md:p-12 shadow-sm">
+        <div className="bg-white rounded-lg p-8 md:p-12 shadow-sm">
           <h2 className="text-3xl font-bold text-[#292826] text-center mb-8">
             Frequently Asked Questions
           </h2>
@@ -458,7 +458,7 @@ export default function SupportPage() {
               </p>
             </div>
           </div>
-        </div> */}
+        </div>
       </section>
     </div>
   );
