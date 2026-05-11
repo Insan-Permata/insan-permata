@@ -8,6 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 type CheckoutBody = {
     email: string
+    fullName: string
     amount: number  // in dollars (e.g. 25)
     type: 'once' | 'monthly'
 }
@@ -15,11 +16,15 @@ type CheckoutBody = {
 export async function POST(request: NextRequest) {
     try {
         const body: CheckoutBody = await request.json()
-        const { email, amount, type } = body
+        const { email, fullName, amount, type } = body
 
         // --- Validation ---
         if (!email || !/\S+@\S+\.\S+/.test(email)) {
             return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
+        }
+        const trimmedName = (fullName ?? '').trim()
+        if (!trimmedName) {
+            return NextResponse.json({ error: 'Name is required' }, { status: 400 })
         }
         if (!amount || amount < 5) {
             return NextResponse.json({ error: 'Minimum donation amount is $5' }, { status: 400 })
@@ -55,9 +60,11 @@ export async function POST(request: NextRequest) {
             mode: isSubscription ? 'subscription' : 'payment',
             customer_email: email,
             line_items: [lineItem],
-            // Pass email through metadata as a backup for webhook correlation
+            // Pass email + donor name through metadata so the webhook can record
+            // them on the donations row (used for year-end statements)
             metadata: {
                 donor_email: email,
+                donor_name: trimmedName,
                 donation_type: type,
             },
             success_url: `${baseUrl}/support/success?session_id={CHECKOUT_SESSION_ID}`,

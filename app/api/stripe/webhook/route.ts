@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { createAdminClient } from '@/lib/utils/supabase/admin'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -7,6 +8,57 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 })
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+/**
+ * Invite a donor to create an account if they don't already have one.
+ *
+ * Three states:
+ *   - confirmed user → already has an active account; do nothing
+ *   - exists but unconfirmed → previously invited; do not re-send (they have the
+ *     original invite email; re-sending would invalidate links anyway)
+ *   - no row → send a fresh invite
+ *
+ * Lookups use public.users, which is kept in sync with auth.users by triggers
+ * (see add_email_confirmed_to_users.sql). Failures are logged but never fail
+ * the webhook — the donation row is the source of truth.
+ */
+async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
+    const normalized = email.toLowerCase()
+
+    const { data: existing, error: lookupError } = await supabase
+        .from('users')
+        .select('id, email_confirmed_at')
+        .eq('email', normalized)
+        .maybeSingle()
+
+    if (lookupError) {
+        console.error('[Webhook] User existence lookup failed:', lookupError)
+        return
+    }
+
+    if (existing?.email_confirmed_at) {
+        // Active account — no invite needed
+        return
+    }
+    if (existing) {
+        // Previously invited but never accepted — leave the original invite in place
+        console.log(`[Webhook] ${normalized} previously invited; skipping re-invite`)
+        return
+    }
+
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/my-account`
+    const { error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
+        normalized,
+        { redirectTo }
+    )
+
+    if (inviteError) {
+        console.error(`[Webhook] Failed to send invite to ${normalized}:`, inviteError)
+        return
+    }
+
+    console.log(`[Webhook] Sent account invite to ${normalized}`)
+}
 
 export async function POST(request: NextRequest) {
     // Read raw body — CRITICAL: Stripe signature verification needs the raw bytes
@@ -49,10 +101,18 @@ export async function POST(request: NextRequest) {
                     break
                 }
 
+                // Donor's stated legal name (from form). Fallback to billing
+                // name if metadata is somehow missing — kept nullable in DB.
+                const donorName =
+                    session.metadata?.donor_name?.trim() ||
+                    session.customer_details?.name?.trim() ||
+                    null
+
                 const donationType = session.mode === 'subscription' ? 'subscription' : 'one_time'
 
                 const { error } = await supabase.from('donations').insert({
                     email: email.toLowerCase(),
+                    donor_name: donorName,
                     amount: session.amount_total ?? 0,           // in cents
                     currency: session.currency ?? 'usd',
                     type: donationType,
@@ -69,6 +129,9 @@ export async function POST(request: NextRequest) {
                 }
 
                 console.log(`[Webhook] Recorded ${donationType} donation: ${email} — $${((session.amount_total ?? 0) / 100).toFixed(2)}`)
+
+                // Invite the donor to create an account if they don't have one
+                await inviteDonorIfNew(supabase, email)
                 break
             }
 
@@ -99,8 +162,19 @@ export async function POST(request: NextRequest) {
 
                 if (!email) break
 
+                // Carry the donor name forward from the original signup donation
+                const { data: prior } = await supabase
+                    .from('donations')
+                    .select('donor_name')
+                    .eq('stripe_subscription_id', subscriptionId)
+                    .not('donor_name', 'is', null)
+                    .order('created_at', { ascending: true })
+                    .limit(1)
+                    .maybeSingle()
+
                 const { error } = await supabase.from('donations').insert({
                     email: email.toLowerCase(),
+                    donor_name: prior?.donor_name ?? null,
                     amount: invoice.amount_paid,
                     currency: invoice.currency ?? 'usd',
                     type: 'subscription',
@@ -116,6 +190,9 @@ export async function POST(request: NextRequest) {
                 }
 
                 console.log(`[Webhook] Recorded subscription renewal: ${email} — $${(invoice.amount_paid / 100).toFixed(2)}`)
+
+                // Cheap idempotent check — invite if (somehow) still missing an account
+                await inviteDonorIfNew(supabase, email)
                 break
             }
 

@@ -10,6 +10,8 @@ export default function SupportPage() {
   const [amountError, setAmountError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
+  const [fullName, setFullName] = useState<string>('');
+  const [nameError, setNameError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string>('');
 
@@ -23,6 +25,15 @@ export default function SupportPage() {
       setEmailError('Please enter a valid email address');
     } else {
       setEmailError('');
+    }
+  };
+
+  const handleNameChange = (value: string) => {
+    setFullName(value);
+    if (!value.trim()) {
+      setNameError('Name is required');
+    } else {
+      setNameError('');
     }
   };
 
@@ -57,6 +68,11 @@ export default function SupportPage() {
       return;
     }
 
+    if (!fullName.trim()) {
+      setNameError('Name is required');
+      return;
+    }
+
     setIsLoading(true);
     setServerError('');
 
@@ -64,7 +80,7 @@ export default function SupportPage() {
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, amount, type: donationType }),
+        body: JSON.stringify({ email, fullName: fullName.trim(), amount, type: donationType }),
       });
 
       const data = await response.json();
@@ -231,6 +247,42 @@ export default function SupportPage() {
               )}
             </div>
 
+            {/* Full Name Input */}
+            <div className="mb-6">
+              <label htmlFor="fullName" className="block text-sm font-medium text-[#292826] opacity-70 mb-2">
+                Full Name <span className="text-red-500">*</span>
+              </label>
+              <div className={`relative border-2 rounded-xl overflow-hidden transition-all ${fullName && !nameError
+                ? 'border-[#355872] ring-2 ring-[#355872] ring-offset-2'
+                : nameError
+                  ? 'border-red-500'
+                  : 'border-gray-200'
+                }`}>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  placeholder="John Doe"
+                  autoComplete="name"
+                  className="w-full px-4 py-4 text-lg font-semibold text-[#292826] outline-none bg-transparent"
+                  required
+                />
+              </div>
+              {nameError ? (
+                <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>{nameError}</span>
+                </div>
+              ) : (
+                <p className="mt-2 text-xs text-[#292826] opacity-50">
+                  This name (not the card name) appears on your year-end statement.
+                </p>
+              )}
+            </div>
+
             {/* Email Address Input */}
             <div className="mb-6">
               <label htmlFor="email" className="block text-sm font-medium text-[#292826] opacity-70 mb-2">
@@ -275,7 +327,7 @@ export default function SupportPage() {
             {/* Donate Button */}
             <button
               onClick={handleDonation}
-              disabled={isLoading || (!selectedAmount && !customAmount) || !!amountError || !email || !!emailError}
+              disabled={isLoading || (!selectedAmount && !customAmount) || !!amountError || !email || !!emailError || !fullName.trim() || !!nameError}
               className="w-full bg-[#355872] text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-[#7AAACE] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (

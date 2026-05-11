@@ -4,6 +4,7 @@ export type DonationStatus = 'pending' | 'paid' | 'failed' | 'cancelled';
 export interface DonationRow {
     id: string;
     email: string;
+    donor_name: string | null;
     amount: number;
     currency: string;
     type: DonationType;
