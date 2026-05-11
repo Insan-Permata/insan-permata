@@ -21,6 +21,7 @@ export interface UserRow {
     credentials_expiry_date: string | null;
     last_donation_time: string | null;
     last_donation_amount: number | null;
+    email_confirmed_at: string | null;
     created_at: string;
     updated_at: string;
 }
