@@ -113,14 +113,13 @@ export default async function DonationSuccessPage({
                         </div>
                         <div>
                             <p className="font-semibold text-[#292826] mb-1">
-                                We&apos;ve sent you a fresh invitation
+                                Check your inbox for your invitation
                             </p>
                             <p className="text-sm text-[#292826] opacity-70 leading-relaxed">
-                                It looks like you hadn&apos;t finished setting up your account yet,
-                                so we&apos;ve emailed a new invitation to <span className="font-medium">{email}</span>.
-                                Any earlier invitation link is no longer valid &mdash; please use this
-                                latest one. Once you set your password you&apos;ll see this donation
-                                in your history.
+                                We&apos;ve sent an invitation to <span className="font-medium">{email}</span> so
+                                you can set your password and access your account. If you can&apos;t
+                                find it, please check your spam folder &mdash; or contact us to
+                                request a new one.
                             </p>
                         </div>
                     </div>

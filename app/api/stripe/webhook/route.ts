@@ -9,14 +9,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
+// Don't re-invite the same unconfirmed donor more than once per this window.
+// Protects against repeat donations spamming the email provider's rate limits
+// (and the donor's inbox).
+const REINVITE_COOLDOWN_MS = 24 * 60 * 60 * 1000
+
 /**
  * Invite a donor to create an account, or resend the invite if they were
  * previously invited but never accepted.
  *
- * Three states:
+ * Four states:
  *   - confirmed user → already has an active account; do nothing
- *   - exists but unconfirmed → delete the stale auth row (invalidates the old
- *     token) and re-invite, so they get a fresh working link
+ *   - unconfirmed, invited within the cooldown → assume their last invite is
+ *     still in their inbox; skip
+ *   - unconfirmed, invited longer ago → delete the stale auth row (invalidates
+ *     the old token) and re-invite, so they get a fresh working link
  *   - no row → send a fresh invite
  *
  * Lookups use public.users, kept in sync with auth.users by triggers
@@ -28,7 +35,7 @@ async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
 
     const { data: existing, error: lookupError } = await supabase
         .from('users')
-        .select('id, email_confirmed_at')
+        .select('id, email_confirmed_at, created_at')
         .eq('email', normalized)
         .maybeSingle()
 
@@ -48,6 +55,14 @@ async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
     const redirectTo = `${siteUrl}/auth/callback?next=/welcome`
 
     if (existing) {
+        const lastInviteAt = existing.created_at ? new Date(existing.created_at).getTime() : 0
+        const ageMs = Date.now() - lastInviteAt
+        if (ageMs < REINVITE_COOLDOWN_MS) {
+            const hoursAgo = (ageMs / 3_600_000).toFixed(1)
+            console.log(`[Webhook] ${normalized} was invited ${hoursAgo}h ago; within cooldown, skipping resend`)
+            return
+        }
+
         // Previously invited but never accepted — delete the stale auth row so
         // we can issue a brand-new invite. public.users cascades via FK.
         const { error: deleteError } = await supabase.auth.admin.deleteUser(existing.id)
