@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BackgroundCarousel from "./(component)/BackgroundCarousel";
 import ImageCarousel from "./(component)/ImageCarousel";
+import FounderStory from "./(component)/FounderStory";
 import { getCarouselsByType } from '@/lib/repositories/carousels.repository';
 
 export default async function Home() {
@@ -71,6 +72,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Founder's Story Section */}
+      <FounderStory />
     </div>
   );
 }

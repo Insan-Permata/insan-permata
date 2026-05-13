@@ -4,7 +4,8 @@
       "Bash(xargs grep *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\josua\\\\Documents\\\\Personal Project\\\\insan-permata\\\\supabase\\\\migrations\" -File)",
       "Bash(Select-Object Name)",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(npx tsc *)"
     ]
   }
 }
