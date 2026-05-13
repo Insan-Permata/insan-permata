@@ -20,7 +20,7 @@ export default function DonationCancelPage() {
                     </svg>
                 </div>
 
-                <h2 className="text-3xl font-bold text-[#292826] mb-4">
+                <h2 className="text-3xl font-normal tracking-tight text-[#292826] mb-4">
                     Payment was not completed
                 </h2>
                 <p className="text-lg text-[#292826] opacity-70 mb-10 leading-relaxed">

@@ -141,7 +141,7 @@ export default function SupportPage() {
 
         {/* Donation Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-[#292826] text-center mb-4">
+          <h2 className="text-3xl font-normal tracking-tight text-[#292826] text-center mb-4">
             Join the Story God Is Writing
           </h2>
           <p className="text-center text-[#292826] opacity-70 mb-8">
@@ -416,7 +416,7 @@ export default function SupportPage() {
 
         {/* Other Ways to Support */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-[#292826] text-center mb-8">
+          <h2 className="text-3xl font-normal tracking-tight text-[#292826] text-center mb-8">
             Other Ways to Support
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -469,7 +469,7 @@ export default function SupportPage() {
 
         {/* FAQ Section */}
         <div className="bg-white rounded-lg p-8 md:p-12 shadow-sm">
-          <h2 className="text-3xl font-bold text-[#292826] text-center mb-8">
+          <h2 className="text-3xl font-normal tracking-tight text-[#292826] text-center mb-8">
             Frequently Asked Questions
           </h2>
           <div className="space-y-6 max-w-3xl mx-auto">

@@ -13,7 +13,7 @@ export default function UnauthorizedPage() {
                 </div>
 
                 {/* Heading */}
-                <h1 className="text-3xl font-bold text-foreground mb-3">
+                <h1 className="text-3xl font-normal tracking-tight text-foreground mb-3">
                     Unauthorized
                 </h1>
 

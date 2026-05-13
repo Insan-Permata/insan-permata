@@ -67,7 +67,7 @@ export default async function StaffDetailPage({ params }: StaffDetailPageProps) 
                         {/* Right Column: Information */}
                         <div className="md:col-span-2 space-y-8">
                             <div className="bg-white rounded-2xl p-8 shadow-sm">
-                                <h2 className="text-3xl font-bold text-foreground mb-6 border-b pb-4">
+                                <h2 className="text-3xl font-normal tracking-tight text-foreground mb-6 border-b pb-4">
                                     {staff.name}
                                 </h2>
 

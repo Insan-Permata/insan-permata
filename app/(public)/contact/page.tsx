@@ -33,7 +33,7 @@ export default function ContactPage() {
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F5F3] mb-4 drop-shadow-lg">Get in Touch</h1>
+          <h1 className="text-4xl md:text-5xl font-normal tracking-tight text-[#F5F5F3] mb-4 drop-shadow-lg">Get in Touch</h1>
           <p className="text-lg text-[#F5F5F3] opacity-90 max-w-2xl mx-auto drop-shadow-md">
             We'd love to hear from you. Whether you have a question, want to volunteer, or simply want to learn more about our work.
           </p>
@@ -44,7 +44,7 @@ export default function ContactPage() {
 
         {/* Contact Channels */}
         <section>
-          <h2 className="text-2xl font-bold text-[#292826] text-center mb-3">Reach Us Directly</h2>
+          <h2 className="text-2xl font-normal tracking-tight text-[#292826] text-center mb-3">Reach Us Directly</h2>
           <p className="text-center text-[#292826] opacity-60 mb-10 max-w-xl mx-auto">
             We'd love to connect. Reach out through any of the channels below.
           </p>
@@ -110,7 +110,7 @@ export default function ContactPage() {
               <MapPin className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold mb-1">Visit Us</h2>
+              <h2 className="text-2xl font-normal tracking-tight mb-1">Visit Us</h2>
               <p className="text-white/70 text-sm">Pekanbaru, Indonesia</p>
             </div>
           </div>

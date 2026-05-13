@@ -28,7 +28,7 @@ export default async function Home() {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-[#F5F5F3] mb-6 max-w-4xl leading-tight drop-shadow-lg">
+          <h1 className="text-5xl md:text-7xl font-normal text-[#F5F5F3] mb-6 max-w-4xl leading-tight tracking-tight drop-shadow-lg">
             A Home for God’s Treasured Children</h1>
           <p className="text-lg md:text-xl font-light text-[#F5F5F3] max-w-2xl leading-relaxed opacity-90 drop-shadow-md">
             Ephesians 2:10 -  "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
@@ -48,7 +48,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Left Side - Text Content */}
             <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#292826]">
+              <h2 className="text-4xl md:text-5xl font-normal tracking-tight text-[#292826]">
                 Our Story & Mission
               </h2>
               <p className="text-base md:text-lg text-[#292826] leading-relaxed">

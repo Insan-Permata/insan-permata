@@ -38,7 +38,7 @@ export default function PageHero({
       
       {/* Title */}
       <div className="relative h-full flex items-center justify-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-[#F5F5F3] drop-shadow-lg">
+        <h1 className="text-5xl md:text-6xl font-normal tracking-tight text-[#F5F5F3] drop-shadow-lg">
           {title}
         </h1>
       </div>

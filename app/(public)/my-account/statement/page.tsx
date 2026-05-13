@@ -47,7 +47,7 @@ export default async function StatementPage() {
                             <FileText className="w-7 h-7 text-[#355872]" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-foreground">
+                            <h2 className="text-2xl font-normal tracking-tight text-foreground">
                                 Year-End Contribution Statement
                             </h2>
                             <p className="text-foreground/60 text-sm mt-1">

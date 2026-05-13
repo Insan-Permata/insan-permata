@@ -50,7 +50,7 @@ export default async function MyAccountPage() {
             <section className="max-w-6xl mx-auto px-6 py-12">
                 {/* Profile summary */}
                 <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 mb-8">
-                    <h2 className="text-2xl font-bold text-foreground mb-4">Account Details</h2>
+                    <h2 className="text-2xl font-normal tracking-tight text-foreground mb-4">Account Details</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-brown/10 flex items-center justify-center flex-shrink-0">
@@ -83,7 +83,7 @@ export default async function MyAccountPage() {
                                 <FileText className="w-6 h-6 text-[#355872]" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-foreground mb-1">
+                                <h2 className="text-xl font-normal tracking-tight text-foreground mb-1">
                                     Year-End Contribution Statement
                                 </h2>
                                 <p className="text-foreground/60 text-sm">
@@ -123,7 +123,7 @@ export default async function MyAccountPage() {
                 {/* Donation history */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="p-6 md:p-8 border-b border-gray-100">
-                        <h2 className="text-2xl font-bold text-foreground">Donation History</h2>
+                        <h2 className="text-2xl font-normal tracking-tight text-foreground">Donation History</h2>
                         <p className="text-foreground/60 text-sm mt-1">
                             All donations made with this email address.
                         </p>

@@ -27,6 +27,7 @@ export default function HeaderComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -63,6 +64,12 @@ export default function HeaderComponent() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setIsAtTop(window.scrollY < window.innerHeight - 80);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -88,27 +95,35 @@ export default function HeaderComponent() {
       <Link
         href={href}
         className={`relative text-base font-medium transition-colors duration-300 py-2 group ${
-          isActive ? "text-brown" : "text-foreground hover:text-brown"
+          isAtTop
+            ? isActive ? "text-white" : "text-white/80 hover:text-white"
+            : isActive ? "text-brown" : "text-foreground hover:text-brown"
         }`}
       >
         {label}
         <span
-          className={`absolute bottom-0 left-0 h-0.5 bg-brown transition-all duration-300 ease-out ${
-            isActive ? "w-full" : "w-0 group-hover:w-full"
-          }`}
+          className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ease-out ${
+            isAtTop ? "bg-white" : "bg-brown"
+          } ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}
         />
       </Link>
     );
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-gray-100">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isAtTop
+        ? "bg-transparent border-transparent"
+        : "bg-background/80 backdrop-blur-md border-b border-gray-100"
+    }`}>
       <nav className="container mx-auto px-6 py-4 relative">
         <div className="flex items-center justify-between">
           {/* Brand Logo */}
           <Link
             href="/"
-            className="text-foreground text-2xl font-bold tracking-tight hover:text-brown transition-colors duration-300"
+            className={`text-2xl font-normal tracking-tight transition-colors duration-300 ${
+              isAtTop ? "text-white hover:text-white/80" : "text-foreground hover:text-brown"
+            }`}
           >
             Insan Permata
           </Link>
@@ -127,9 +142,11 @@ export default function HeaderComponent() {
                 <Link
                   href="/my-account"
                   className={`flex items-center gap-1.5 text-base font-medium transition-colors duration-300 ${
-                    pathname === "/my-account" || pathname.startsWith("/my-account/")
-                      ? "text-brown"
-                      : "text-foreground hover:text-brown"
+                    isAtTop
+                      ? "text-white/80 hover:text-white"
+                      : pathname === "/my-account" || pathname.startsWith("/my-account/")
+                        ? "text-brown"
+                        : "text-foreground hover:text-brown"
                   }`}
                 >
                   <UserCircle className="w-4 h-4" />
@@ -143,7 +160,9 @@ export default function HeaderComponent() {
               <li>
                 <Link
                   href="/admin/dashboard"
-                  className="flex items-center gap-1.5 text-base font-medium text-foreground hover:text-brown transition-colors duration-300"
+                  className={`flex items-center gap-1.5 text-base font-medium transition-colors duration-300 ${
+                    isAtTop ? "text-white/80 hover:text-white" : "text-foreground hover:text-brown"
+                  }`}
                 >
                   <LayoutDashboard className="w-4 h-4" />
                   Dashboard
@@ -157,7 +176,9 @@ export default function HeaderComponent() {
                 <button
                   onClick={handleSignOut}
                   disabled={isSigningOut}
-                  className="flex items-center gap-1.5 text-base font-medium text-foreground hover:text-brown transition-colors duration-300 disabled:opacity-60"
+                  className={`flex items-center gap-1.5 text-base font-medium transition-colors duration-300 disabled:opacity-60 ${
+                    isAtTop ? "text-white/80 hover:text-white" : "text-foreground hover:text-brown"
+                  }`}
                 >
                   <LogOut className="w-4 h-4" />
                   {isSigningOut ? "Signing out…" : "Sign Out"}
@@ -167,7 +188,11 @@ export default function HeaderComponent() {
               <li>
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 bg-brown text-white text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200"
+                  className={`flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 ${
+                    isAtTop
+                      ? "border border-white text-white hover:bg-[#355872] hover:border-[#355872]"
+                      : "bg-brown text-white hover:opacity-90"
+                  }`}
                 >
                   <LogIn className="w-4 h-4" />
                   Sign In
@@ -178,7 +203,9 @@ export default function HeaderComponent() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-foreground hover:text-brown transition-colors"
+            className={`md:hidden p-2 transition-colors ${
+              isAtTop ? "text-white hover:text-white/80" : "text-foreground hover:text-brown"
+            }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
