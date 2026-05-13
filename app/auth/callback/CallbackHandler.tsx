@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 
 /**
@@ -19,7 +19,6 @@ import { createBrowserClient } from '@supabase/ssr'
  * auth cookie via @supabase/ssr), then redirect to `next` (default /my-account).
  */
 export default function CallbackHandler() {
-    const router = useRouter()
     const searchParams = useSearchParams()
     const next = searchParams.get('next') ?? '/my-account'
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -73,10 +72,9 @@ export default function CallbackHandler() {
                     throw new Error('No auth payload on callback URL. The invitation link may have already been used.')
                 }
 
-                // Session cookies are now set. Push to next, and refresh so the
-                // server middleware re-reads cookies for the protected route.
-                router.replace(next)
-                router.refresh()
+                // Hard navigate so the browser sends the new auth cookies on a fresh
+                // request — avoids any client-router race with refresh/replace.
+                window.location.replace(next)
             } catch (err) {
                 console.error('[Auth callback]', err)
                 const message = err instanceof Error ? err.message : 'Unknown error'
@@ -87,7 +85,7 @@ export default function CallbackHandler() {
         }
 
         handleCallback()
-    }, [router, next])
+    }, [next])
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
