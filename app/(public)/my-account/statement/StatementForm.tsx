@@ -1,28 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Calendar } from 'lucide-react';
+import { FileText, Calendar, CheckCircle } from 'lucide-react';
+import { generateStatement } from '@/lib/actions/statement.actions';
 
 interface StatementFormProps {
     years: number[];
 }
 
+type Notice =
+    | { type: 'success'; statementId: string }
+    | { type: 'error'; message: string };
+
 export default function StatementForm({ years }: StatementFormProps) {
     const [selectedYear, setSelectedYear] = useState<number>(years[0]);
     const [isGenerating, setIsGenerating] = useState(false);
-    const [notice, setNotice] = useState<string>('');
+    const [notice, setNotice] = useState<Notice | null>(null);
 
     const handleGenerate = async () => {
         setIsGenerating(true);
-        setNotice('');
+        setNotice(null);
 
-        // TODO: wire up to a real generation endpoint
-        // e.g. window.location.href = `/api/donations/statement?year=${selectedYear}`
-        await new Promise((resolve) => setTimeout(resolve, 600));
+        const result = await generateStatement(selectedYear);
 
-        setNotice(
-            `Statement generation for ${selectedYear} isn't available yet — this will be enabled soon.`
-        );
+        if (result.success) {
+            setNotice({ type: 'success', statementId: result.statementId });
+        } else {
+            setNotice({ type: 'error', message: result.error });
+        }
+
         setIsGenerating(false);
     };
 
@@ -36,7 +42,7 @@ export default function StatementForm({ years }: StatementFormProps) {
                     <button
                         key={year}
                         type="button"
-                        onClick={() => setSelectedYear(year)}
+                        onClick={() => { setSelectedYear(year); setNotice(null); }}
                         className={`relative py-3 px-4 rounded-xl font-semibold text-base transition-all flex items-center justify-center gap-2 ${
                             selectedYear === year
                                 ? 'bg-[#355872] text-white ring-2 ring-[#355872] ring-offset-2'
@@ -71,9 +77,20 @@ export default function StatementForm({ years }: StatementFormProps) {
                 )}
             </button>
 
-            {notice && (
-                <p className="mt-4 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-                    {notice}
+            {notice?.type === 'success' && (
+                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                        <p className="text-sm font-medium text-green-800">Statement recorded successfully</p>
+                        <p className="text-xs text-green-700 mt-0.5 font-mono">{notice.statementId}</p>
+                        <p className="text-xs text-green-600 mt-1">PDF download will be available soon.</p>
+                    </div>
+                </div>
+            )}
+
+            {notice?.type === 'error' && (
+                <p className="mt-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                    {notice.message}
                 </p>
             )}
         </div>

@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { FileText, Heart, Mail, Calendar } from 'lucide-react';
+import { FileText, Heart, Mail, Calendar, Clock } from 'lucide-react';
 import PageHero from '../(component)/PageHero';
 import Breadcrumbs from '../(component)/Breadcrumbs';
 import { createClient } from '@/lib/utils/supabase/server';
 import { getMyDonations } from '@/lib/repositories/donations.repository';
+import { getMyStatements } from '@/lib/repositories/statements.repository';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,10 +24,31 @@ function formatDate(iso: string): string {
     });
 }
 
+function formatDateTime(iso: string): string {
+    return new Date(iso).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
+
+function formatDollarAmount(amount: number, currency: string): string {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency.toUpperCase(),
+        minimumFractionDigits: 2,
+    }).format(amount);
+}
+
 export default async function MyAccountPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    const donations = await getMyDonations();
+    const [donations, statements] = await Promise.all([
+        getMyDonations(),
+        getMyStatements(),
+    ]);
 
     const totalGiven = donations.reduce((sum, d) => sum + d.amount, 0);
     const currency = donations[0]?.currency ?? 'usd';
@@ -119,6 +141,66 @@ export default async function MyAccountPage() {
                         </div>
                     )}
                 </div>
+
+                {/* Generated statements */}
+                {statements.length > 0 && (
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                        <div className="p-6 md:p-8 border-b border-gray-100">
+                            <h2 className="text-2xl font-normal tracking-tight text-foreground">Generated Statements</h2>
+                            <p className="text-foreground/60 text-sm mt-1">
+                                Previously generated year-end contribution statements.
+                            </p>
+                        </div>
+
+                        {/* Desktop table */}
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 border-b border-gray-100">
+                                    <tr>
+                                        <th className="text-left text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Statement ID</th>
+                                        <th className="text-left text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Year</th>
+                                        <th className="text-right text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Total</th>
+                                        <th className="text-left text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Generated</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {statements.map((s) => (
+                                        <tr key={s.id} className="hover:bg-gray-50/50 transition-colors">
+                                            <td className="px-6 py-4 font-mono text-xs text-foreground/80">{s.id}</td>
+                                            <td className="px-6 py-4 text-sm text-foreground">{s.year}</td>
+                                            <td className="px-6 py-4 text-sm font-semibold text-foreground text-right">
+                                                {formatDollarAmount(s.total_amount, s.currency)}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-foreground/60 flex items-center gap-1.5">
+                                                <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                                                {formatDateTime(s.generated_at)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Mobile card list */}
+                        <ul className="md:hidden divide-y divide-gray-100">
+                            {statements.map((s) => (
+                                <li key={s.id} className="p-5">
+                                    <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                            <p className="font-semibold text-foreground">{formatDollarAmount(s.total_amount, s.currency)}</p>
+                                            <p className="text-sm text-foreground/60">Tax year {s.year}</p>
+                                        </div>
+                                    </div>
+                                    <p className="font-mono text-xs text-foreground/50 mb-1">{s.id}</p>
+                                    <p className="text-xs text-foreground/50 flex items-center gap-1">
+                                        <Clock className="w-3 h-3" />
+                                        {formatDateTime(s.generated_at)}
+                                    </p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 {/* Donation history */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
