@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <div className="relative w-full">
       {/* Hero Section */}
-      <div className="relative w-full min-h-screen pt-0">
+      <div data-hero className="relative w-full min-h-screen pt-0">
         {/* Background Carousel - Fixed behind header */}
         <BackgroundCarousel
           images={backgroundImages.length > 0 ? backgroundImages : ['/placeholder.jpg']}

@@ -27,7 +27,8 @@ export default function HeaderComponent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [isAtTop, setIsAtTop] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(false);
+  const [scrollThreshold, setScrollThreshold] = useState(0);
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,10 +66,21 @@ export default function HeaderComponent() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setIsAtTop(window.scrollY < window.innerHeight - 80);
+    const update = () => {
+      const hero = document.querySelector('[data-hero]') as HTMLElement | null;
+      const threshold = hero ? hero.offsetHeight - 80 : 0;
+      setScrollThreshold(threshold);
+      setIsAtTop(window.scrollY < threshold);
+    };
+    const timer = setTimeout(update, 0);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsAtTop(window.scrollY < scrollThreshold);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scrollThreshold]);
 
   // Close mobile menu when route changes
   useEffect(() => {

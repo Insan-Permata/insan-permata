@@ -16,7 +16,7 @@ export default function PageHero({
   overlayOpacity = 0.4,
 }: PageHeroProps) {
   return (
-    <section className="relative w-full" style={{ height }}>
+    <section data-hero className="relative w-full" style={{ height }}>
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image

@@ -23,7 +23,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F3]">
       {/* Hero Section */}
-      <div className="relative w-full h-[60vh] min-h-[400px] flex items-center justify-center">
+      <div data-hero className="relative w-full h-[60vh] min-h-[400px] flex items-center justify-center">
         <div className="absolute inset-0">
           <img
             src="/home_bg_photos/1.jpg"
