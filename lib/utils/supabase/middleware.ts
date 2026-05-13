@@ -40,18 +40,34 @@ export async function updateSession(request: NextRequest) {
 
     const { pathname } = request.nextUrl
 
-    // Protect /admin routes — redirect to /login if not authenticated
-    if (pathname.startsWith('/admin') && !user && !pathname.startsWith('/login')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/login'
-        return NextResponse.redirect(url)
-    }
+    // Protect /admin routes
+    if (pathname.startsWith('/admin')) {
+        // Not logged in → redirect to login
+        if (!user) {
+            const url = request.nextUrl.clone()
+            url.pathname = '/login'
+            return NextResponse.redirect(url)
+        }
 
-    // Redirect logged-in users away from the login page if they hit /admin directly
-    if (user && pathname === '/admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin/dashboard'
-        return NextResponse.redirect(url)
+        // Logged in but hit /admin root → redirect to dashboard
+        if (pathname === '/admin') {
+            const url = request.nextUrl.clone()
+            url.pathname = '/admin/dashboard'
+            return NextResponse.redirect(url)
+        }
+
+        // Logged in — check role and status
+        const { data: profile } = await supabase
+            .from('users')
+            .select('role, status')
+            .eq('id', user.id)
+            .single()
+
+        if (!profile || profile.role !== 'admin' || profile.status !== 'active') {
+            const url = request.nextUrl.clone()
+            url.pathname = '/unauthorized'
+            return NextResponse.redirect(url)
+        }
     }
 
     // Protect member-only public routes — redirect to /unauthorized if not authenticated
