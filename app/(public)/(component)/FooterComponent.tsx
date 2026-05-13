@@ -1,12 +1,12 @@
 "use client";
 
-import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
+import { Instagram, Mail, Phone, Youtube } from 'lucide-react';
 
 export default function FooterComponent() {
   const currentYear = new Date().getFullYear();
   const copyrightText = `© ${currentYear} Insan Permata`;
-  const facebookUrl = 'https://facebook.com';
-  const instagramUrl = 'https://instagram.com';
+  const instagramUrl = 'https://www.instagram.com/insanpermata_home/';
+  const youtubeUrl = 'https://www.youtube.com/@insanpermatahome6342';
   const phoneNumber = '+62 812 3456 7890';
   const email = 'info@insanpermata.org';
 
@@ -44,17 +44,17 @@ export default function FooterComponent() {
             <div className="flex items-center gap-3">
               <button
                 className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
-                onClick={() => window.open(facebookUrl, '_blank')}
-                aria-label="Visit our Facebook page"
-              >
-                <Facebook className="h-4 w-4 text-[#F5F5F3]" />
-              </button>
-              <button
-                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
                 onClick={() => window.open(instagramUrl, '_blank')}
                 aria-label="Visit our Instagram page"
               >
                 <Instagram className="h-4 w-4 text-[#F5F5F3]" />
+              </button>
+              <button
+                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
+                onClick={() => window.open(youtubeUrl, '_blank')}
+                aria-label="Visit our YouTube channel"
+              >
+                <Youtube className="h-4 w-4 text-[#F5F5F3]" />
               </button>
             </div>
           </div>

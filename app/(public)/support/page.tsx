@@ -478,8 +478,7 @@ export default function SupportPage() {
                 Is my donation tax-deductible?
               </h3>
               <p className="text-[#292826] opacity-70">
-                Yes, Panti Asuhan Insan Permata is a registered non-profit organization.
-                You will receive a receipt for tax purposes after your donation.
+                Yes! Once your donor account is set up, you can log in and generate your contribution statement directly from your account.
               </p>
             </div>
             <div>
@@ -487,8 +486,7 @@ export default function SupportPage() {
                 How will I know my donation is being used properly?
               </h3>
               <p className="text-[#292826] opacity-70">
-                We provide regular updates to our donors and maintain full transparency in our operations.
-                100% of donations go directly to supporting the children and facility.
+                Donors receive access to our private news section, where we share updates and stories about the children and daily life at Insan Permata. It's our way of keeping you connected to the work your support makes possible.
               </p>
             </div>
             <div>
