@@ -39,14 +39,26 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
         return age;
     };
 
+    const getAgeGroup = (age: number | null) => {
+        if (age === null) return null;
+        if (age < 4) return 'Toddler (Under 4)';
+        if (age <= 7) return 'Early Childhood (4–7)';
+        if (age <= 11) return 'Children (8–11)';
+        if (age <= 15) return 'Early Teens (12–15)';
+        if (age <= 19) return 'Late Teens (16–19)';
+        return null;
+    };
+
     const age = calculateAge(child.date_of_birth);
+    const ageGroup = getAgeGroup(age);
+    const firstName = child.name.split(' ')[0];
 
     return (
         <div className="min-h-screen bg-background">
             <PageHero
                 imageSrc="/our_children_bg/1.png"
                 imageAlt="Our Children Background"
-                title={child.name}
+                title={firstName}
                 height="30vh"
                 overlayOpacity={0.4}
             />
@@ -55,7 +67,7 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                 items={[
                     { label: 'Home', href: '/' },
                     { label: 'Our Children', href: '/our-children' },
-                    { label: child.name, href: `/our-children/${child.id}` }
+                    { label: firstName, href: `/our-children/${child.id}` }
                 ]}
             />
 
@@ -87,7 +99,7 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                     <div className="md:col-span-2 space-y-8">
                         <div className="bg-white rounded-2xl p-8 shadow-sm">
                             <h2 className="text-3xl font-normal tracking-tight text-foreground mb-6 border-b pb-4">
-                                Hello, I'm {child.name}!
+                                Hello, I'm {firstName}!
                             </h2>
 
                             <div className="space-y-6">
@@ -100,13 +112,13 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                                     </p>
                                 </div>
 
-                                {age !== null && (
+                                {ageGroup && (
                                     <div>
                                         <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                                            Age
+                                            Age Group
                                         </h3>
                                         <p className="text-xl text-foreground font-medium">
-                                            {age} years old
+                                            {ageGroup}
                                         </p>
                                     </div>
                                 )}

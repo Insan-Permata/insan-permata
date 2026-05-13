@@ -36,7 +36,7 @@ export default function ChildrenCard({ id, name, photo }: ChildrenCardProps) {
         <div className="flex items-end justify-between">
           <div>
             <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-md">
-              {name}
+              {name.split(' ')[0]}
             </h3>
             <div className="h-1 w-12 bg-brown rounded-full transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
           </div>
