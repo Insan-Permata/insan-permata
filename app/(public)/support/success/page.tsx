@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import Stripe from 'stripe'
-import { Mail, MailOpen, UserCircle } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import PageHero from '../../(component)/PageHero'
-import { createAdminClient } from '@/lib/utils/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,43 +9,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-02-25.clover',
 })
 
-type AccountState = 'confirmed' | 'pending' | 'new' | 'unknown'
-
-async function getDonationContext(sessionId: string | undefined): Promise<{
-    email: string | null
-    state: AccountState
-}> {
-    if (!sessionId) return { email: null, state: 'unknown' }
-
-    let email: string | null = null
+async function getDonationEmail(sessionId: string | undefined): Promise<string | null> {
+    if (!sessionId) return null
     try {
         const session = await stripe.checkout.sessions.retrieve(sessionId)
-        email =
+        return (
             session.customer_email ||
-            (session.customer_details?.email ?? null) ||
-            (session.metadata?.donor_email ?? null)
+            session.customer_details?.email ||
+            session.metadata?.donor_email ||
+            null
+        )
     } catch (err) {
         console.error('[Success] Failed to retrieve Stripe session:', err)
-        return { email: null, state: 'unknown' }
+        return null
     }
-
-    if (!email) return { email: null, state: 'unknown' }
-
-    const admin = createAdminClient()
-    const { data, error } = await admin
-        .from('users')
-        .select('id, email_confirmed_at')
-        .eq('email', email.toLowerCase())
-        .maybeSingle()
-
-    if (error) {
-        console.error('[Success] User lookup failed:', error)
-        return { email, state: 'unknown' }
-    }
-
-    if (!data) return { email, state: 'new' }
-    if (data.email_confirmed_at) return { email, state: 'confirmed' }
-    return { email, state: 'pending' }
 }
 
 export default async function DonationSuccessPage({
@@ -55,7 +31,7 @@ export default async function DonationSuccessPage({
     searchParams: Promise<{ session_id?: string }>
 }) {
     const { session_id } = await searchParams
-    const { email, state } = await getDonationContext(session_id)
+    const email = await getDonationEmail(session_id)
 
     return (
         <div className="min-h-screen bg-[#F5F5F3]">
@@ -82,19 +58,18 @@ export default async function DonationSuccessPage({
                     Thank you so much for your generosity. Your support directly impacts the lives of the children at Panti Asuhan Insan Permata.
                 </p>
 
-                {/* Account-status message */}
-                {state === 'confirmed' && (
+                {/* Account message — generic regardless of registration state */}
+                {email ? (
                     <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10 text-left flex items-start gap-4">
                         <div className="w-10 h-10 rounded-full bg-[#355872]/10 flex items-center justify-center flex-shrink-0">
-                            <UserCircle className="w-5 h-5 text-[#355872]" />
+                            <Mail className="w-5 h-5 text-[#355872]" />
                         </div>
                         <div>
-                            <p className="font-semibold text-[#292826] mb-1">
-                                You already have an account
-                            </p>
+                            <p className="font-semibold text-[#292826] mb-1">Check your inbox</p>
                             <p className="text-sm text-[#292826] opacity-70 leading-relaxed">
-                                {email ? <>This donation is linked to <span className="font-medium">{email}</span>. </> : null}
-                                Sign in to view this contribution alongside your full donation history.
+                                We&apos;ve sent a confirmation to <span className="font-medium">{email}</span>.
+                                If that email isn&apos;t yet linked to an account, an invitation to create
+                                one is on its way too. Check your spam folder if you don&apos;t see it.
                             </p>
                             <Link
                                 href="/my-account"
@@ -104,46 +79,7 @@ export default async function DonationSuccessPage({
                             </Link>
                         </div>
                     </div>
-                )}
-
-                {state === 'pending' && (
-                    <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10 text-left flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-[#355872]/10 flex items-center justify-center flex-shrink-0">
-                            <MailOpen className="w-5 h-5 text-[#355872]" />
-                        </div>
-                        <div>
-                            <p className="font-semibold text-[#292826] mb-1">
-                                Check your inbox for your invitation
-                            </p>
-                            <p className="text-sm text-[#292826] opacity-70 leading-relaxed">
-                                We&apos;ve sent an invitation to <span className="font-medium">{email}</span> so
-                                you can set your password and access your account. If you can&apos;t
-                                find it, please check your spam folder &mdash; or contact us to
-                                request a new one.
-                            </p>
-                        </div>
-                    </div>
-                )}
-
-                {state === 'new' && email && (
-                    <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-10 text-left flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-[#355872]/10 flex items-center justify-center flex-shrink-0">
-                            <Mail className="w-5 h-5 text-[#355872]" />
-                        </div>
-                        <div>
-                            <p className="font-semibold text-[#292826] mb-1">
-                                Your invitation is on the way
-                            </p>
-                            <p className="text-sm text-[#292826] opacity-70 leading-relaxed">
-                                We&apos;ve sent an invitation to <span className="font-medium">{email}</span> so
-                                you can set up an account. Once you accept, you&apos;ll be able to view
-                                this donation and any future contributions in your account.
-                            </p>
-                        </div>
-                    </div>
-                )}
-
-                {state === 'unknown' && (
+                ) : (
                     <p className="text-[#292826] opacity-60 mb-10">
                         We&apos;ve emailed a receipt to the address you provided. Check your inbox
                         for next steps.
