@@ -1,18 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Loader2, Eye, EyeOff, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { setInitialPassword } from './actions'
+import { checkPasswordStrength, type StrengthLevel } from './password-strength'
 
 interface WelcomeFormProps {
     email: string
 }
 
+const STRENGTH_LABEL: Record<StrengthLevel, string> = {
+    'too-short': 'Too short',
+    'weak': 'Weak',
+    'fair': 'Fair',
+    'good': 'Good',
+    'strong': 'Strong',
+}
+
+const STRENGTH_COLOR: Record<StrengthLevel, string> = {
+    'too-short': 'bg-red-400',
+    'weak': 'bg-red-400',
+    'fair': 'bg-amber-400',
+    'good': 'bg-emerald-400',
+    'strong': 'bg-emerald-500',
+}
+
 export default function WelcomeForm({ email }: WelcomeFormProps) {
     const [showPassword, setShowPassword] = useState(false)
+    const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
+
+    const strength = useMemo(() => checkPasswordStrength(password), [password])
 
     const handleSubmit = async (formData: FormData) => {
         setIsLoading(true)
@@ -84,10 +104,12 @@ export default function WelcomeForm({ email }: WelcomeFormProps) {
                                         name="password"
                                         type={showPassword ? 'text' : 'password'}
                                         required
-                                        minLength={8}
+                                        minLength={12}
                                         autoComplete="new-password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         className="w-full px-4 py-3 pr-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent transition-all outline-none text-sm"
-                                        placeholder="At least 8 characters"
+                                        placeholder="At least 12 characters"
                                     />
                                     <button
                                         type="button"
@@ -98,6 +120,26 @@ export default function WelcomeForm({ email }: WelcomeFormProps) {
                                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                     </button>
                                 </div>
+
+                                {/* Strength meter */}
+                                {password.length > 0 && (
+                                    <div className="mt-2">
+                                        <div className="flex h-1.5 gap-1">
+                                            {[0, 1, 2, 3].map((i) => (
+                                                <div
+                                                    key={i}
+                                                    className={`flex-1 rounded-full transition-colors ${
+                                                        i < strength.score ? STRENGTH_COLOR[strength.level] : 'bg-gray-200'
+                                                    }`}
+                                                />
+                                            ))}
+                                        </div>
+                                        <p className={`mt-1.5 text-xs ${strength.ok ? 'text-foreground/60' : 'text-red-600'}`}>
+                                            {STRENGTH_LABEL[strength.level]}
+                                            {strength.reason ? ` — ${strength.reason}` : strength.ok ? '' : ''}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Confirm password */}
@@ -113,7 +155,7 @@ export default function WelcomeForm({ email }: WelcomeFormProps) {
                                     name="confirmPassword"
                                     type={showPassword ? 'text' : 'password'}
                                     required
-                                    minLength={8}
+                                    minLength={12}
                                     autoComplete="new-password"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent transition-all outline-none text-sm"
                                     placeholder="Re-enter your password"
