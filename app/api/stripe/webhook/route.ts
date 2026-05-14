@@ -18,6 +18,16 @@ const REINVITE_COOLDOWN_MS = 24 * 60 * 60 * 1000
  * Invite a donor to create an account, or resend the invite if they were
  * previously invited but never accepted.
  *
+ * NOTE on the delete-then-reinvite path: Supabase's admin SDK does not expose
+ * a "resend invite email for an existing user" call. `inviteUserByEmail`
+ * throws if a row already exists, and `generateLink({type:'invite'})` returns
+ * the link but does NOT send the email (you'd need a separate transactional
+ * email provider for that). So for unconfirmed donors who haven't accepted
+ * their first invite, the only built-in way to deliver a fresh invite email
+ * is to delete the stale auth row (it has never been used) and call
+ * inviteUserByEmail again. Guards below ensure we only ever delete rows
+ * where `email_confirmed_at IS NULL` — i.e. no real account is lost.
+ *
  * Four states:
  *   - confirmed user → already has an active account; do nothing
  *   - unconfirmed, invited within the cooldown → assume their last invite is
@@ -60,6 +70,19 @@ async function inviteDonorIfNew(supabase: SupabaseClient, email: string) {
         if (ageMs < REINVITE_COOLDOWN_MS) {
             const hoursAgo = (ageMs / 3_600_000).toFixed(1)
             console.log(`[Webhook] ${normalized} was invited ${hoursAgo}h ago; within cooldown, skipping resend`)
+            return
+        }
+
+        // Defensive re-check directly against auth.users — if email_confirmed_at
+        // changed between the public.users lookup and now (race or trigger lag),
+        // bail out rather than wipe a confirmed account.
+        const { data: authUser, error: authLookupError } = await supabase.auth.admin.getUserById(existing.id)
+        if (authLookupError || !authUser?.user) {
+            console.error(`[Webhook] auth lookup failed for ${normalized}, skipping reinvite:`, authLookupError)
+            return
+        }
+        if (authUser.user.email_confirmed_at) {
+            console.warn(`[Webhook] ${normalized} is already confirmed in auth; skipping delete+reinvite`)
             return
         }
 

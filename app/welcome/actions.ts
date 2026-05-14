@@ -2,13 +2,15 @@
 
 import { createClient } from '@/lib/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import { checkPasswordStrength } from './password-strength'
 
 export async function setInitialPassword(formData: FormData) {
     const password = (formData.get('password') as string) ?? ''
     const confirmPassword = (formData.get('confirmPassword') as string) ?? ''
 
-    if (password.length < 8) {
-        return { error: 'Password must be at least 8 characters long.' }
+    const strength = checkPasswordStrength(password)
+    if (!strength.ok) {
+        return { error: strength.reason }
     }
     if (password !== confirmPassword) {
         return { error: 'Passwords do not match.' }

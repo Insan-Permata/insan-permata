@@ -173,7 +173,7 @@ export default function SupportPage() {
           <p className="text-center text-[#292826] opacity-70 mb-8">
             As part of our commitment to transparency and relationship, donors receive secure access to our private supporter page.
 
-            Inside, you can follow updates, stories, and reports about the children and staff of Insan Permata.
+            Inside, you can follow occasional updates and stories from the children and staff of Insan Permata.
 
             Login details will be emailed to you after your donation is received.
           </p>
@@ -519,7 +519,7 @@ export default function SupportPage() {
                 How will I know my donation is being used properly?
               </h3>
               <p className="text-[#292826] opacity-70">
-                Donors receive access to our private news section, where we share updates and stories about the children and daily life at Insan Permata. It&apos;s our way of keeping you connected to the work your support makes possible.
+                Donors receive access to our private news section, where we share occasional updates and stories from the children and daily life at Insan Permata. We post when there&apos;s news worth telling — our aim is honest, unhurried storytelling rather than a fixed publishing schedule.
               </p>
             </div>
             <div>

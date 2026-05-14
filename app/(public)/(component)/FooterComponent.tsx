@@ -1,6 +1,14 @@
 "use client";
 
+import Link from 'next/link';
 import { Instagram, Mail, Phone, Youtube } from 'lucide-react';
+
+const LEGAL_LINKS = [
+  { href: '/privacy', label: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms of Service' },
+  { href: '/refund-policy', label: 'Refund Policy' },
+  { href: '/child-protection-policy', label: 'Child Protection' },
+];
 
 export default function FooterComponent() {
   const currentYear = new Date().getFullYear();
@@ -61,10 +69,21 @@ export default function FooterComponent() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#292826] border-opacity-10">
-          <p className="text-xs text-[#292826] text-center opacity-80">
+        <div className="pt-8 border-t border-[#292826] border-opacity-10 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-[#292826] opacity-80">
             {copyrightText}
           </p>
+          <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-xs text-[#292826] opacity-80 hover:opacity-100 hover:underline"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>
