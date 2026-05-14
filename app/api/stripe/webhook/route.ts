@@ -108,6 +108,21 @@ export async function POST(request: NextRequest) {
     // Use service-role client — bypasses RLS to write to the donations table
     const supabase = createAdminClient()
 
+    // Idempotency gate: Stripe retries webhooks on any non-2xx and occasionally
+    // double-fires. Reject any event we've already processed before doing work.
+    {
+        const { data: alreadyProcessed } = await supabase
+            .from('processed_stripe_events')
+            .select('event_id')
+            .eq('event_id', event.id)
+            .maybeSingle()
+
+        if (alreadyProcessed) {
+            console.log(`[Webhook] Skipping duplicate event ${event.id} (${event.type})`)
+            return NextResponse.json({ received: true, duplicate: true })
+        }
+    }
+
     try {
         switch (event.type) {
             case 'checkout.session.completed': {
@@ -136,17 +151,23 @@ export async function POST(request: NextRequest) {
 
                 const donationType = session.mode === 'subscription' ? 'subscription' : 'one_time'
 
-                const { error } = await supabase.from('donations').insert({
-                    email: email.toLowerCase(),
-                    donor_name: donorName,
-                    amount: session.amount_total ?? 0,           // in cents
-                    currency: session.currency ?? 'usd',
-                    type: donationType,
-                    stripe_session_id: session.id,
-                    stripe_customer_id: session.customer as string | null,
-                    stripe_subscription_id: session.subscription as string | null,
-                    status: 'paid',
-                })
+                // Upsert on stripe_session_id (UNIQUE) — if Stripe replays this
+                // event before we recorded the row in processed_stripe_events,
+                // the UNIQUE constraint is our last line of defense.
+                const { error } = await supabase.from('donations').upsert(
+                    {
+                        email: email.toLowerCase(),
+                        donor_name: donorName,
+                        amount: session.amount_total ?? 0,           // in cents
+                        currency: session.currency ?? 'usd',
+                        type: donationType,
+                        stripe_session_id: session.id,
+                        stripe_customer_id: session.customer as string | null,
+                        stripe_subscription_id: session.subscription as string | null,
+                        status: 'paid',
+                    },
+                    { onConflict: 'stripe_session_id', ignoreDuplicates: true }
+                )
 
                 if (error) {
                     console.error('[Webhook] DB insert error (checkout.session.completed):', error)
@@ -198,17 +219,24 @@ export async function POST(request: NextRequest) {
                     .limit(1)
                     .maybeSingle()
 
-                const { error } = await supabase.from('donations').insert({
-                    email: email.toLowerCase(),
-                    donor_name: prior?.donor_name ?? null,
-                    amount: invoice.amount_paid,
-                    currency: invoice.currency ?? 'usd',
-                    type: 'subscription',
-                    stripe_session_id: null,
-                    stripe_customer_id: customerId,
-                    stripe_subscription_id: subscriptionId,
-                    status: 'paid',
-                })
+                // Renewals are keyed on the Stripe invoice id (UNIQUE).
+                // If the same invoice.paid is replayed before processed_stripe_events
+                // catches it, the unique index makes the second insert a no-op.
+                const { error } = await supabase.from('donations').upsert(
+                    {
+                        email: email.toLowerCase(),
+                        donor_name: prior?.donor_name ?? null,
+                        amount: invoice.amount_paid,
+                        currency: invoice.currency ?? 'usd',
+                        type: 'subscription',
+                        stripe_session_id: null,
+                        stripe_invoice_id: invoice.id,
+                        stripe_customer_id: customerId,
+                        stripe_subscription_id: subscriptionId,
+                        status: 'paid',
+                    },
+                    { onConflict: 'stripe_invoice_id', ignoreDuplicates: true }
+                )
 
                 if (error) {
                     console.error('[Webhook] DB insert error (invoice.paid):', error)
@@ -239,6 +267,16 @@ export async function POST(request: NextRequest) {
         console.error('[Webhook] Handler error:', err)
         return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
     }
+
+    // Record this event as processed. Done last so a mid-handler error leaves
+    // the row absent and Stripe's retry can re-attempt cleanly. Duplicate
+    // insert here is fine (PK conflict on event_id) — silently ignored.
+    await supabase
+        .from('processed_stripe_events')
+        .upsert(
+            { event_id: event.id, event_type: event.type },
+            { onConflict: 'event_id', ignoreDuplicates: true }
+        )
 
     // Always return 200 to tell Stripe the webhook was received
     return NextResponse.json({ received: true })

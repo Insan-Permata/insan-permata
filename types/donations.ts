@@ -9,6 +9,7 @@ export interface DonationRow {
     currency: string;
     type: DonationType;
     stripe_session_id: string | null;
+    stripe_invoice_id: string | null;
     stripe_customer_id: string | null;
     stripe_subscription_id: string | null;
     status: DonationStatus;
