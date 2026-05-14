@@ -3,19 +3,23 @@ import { ArrowLeft, FileText, Download, Info } from 'lucide-react';
 import PageHero from '../../(component)/PageHero';
 import Breadcrumbs from '../../(component)/Breadcrumbs';
 import { getMyDonations } from '@/lib/repositories/donations.repository';
+import { getMyStatements } from '@/lib/repositories/statements.repository';
 import StatementForm from './StatementForm';
+import PastStatements from './PastStatements';
 
 export const dynamic = 'force-dynamic';
 
 export default async function StatementPage() {
-    const donations = await getMyDonations();
+    const [donations, pastStatements] = await Promise.all([
+        getMyDonations(),
+        getMyStatements(),
+    ]);
 
     const availableYears = Array.from(
         new Set(donations.map((d) => new Date(d.created_at).getFullYear()))
     ).sort((a, b) => b - a);
 
     const currentYear = new Date().getFullYear();
-    // Fallback: if no donations on file yet, still offer the current and previous year
     const yearsToOffer = availableYears.length > 0
         ? availableYears
         : [currentYear, currentYear - 1];
@@ -32,10 +36,10 @@ export default async function StatementPage() {
 
             <Breadcrumbs />
 
-            <section className="max-w-3xl mx-auto px-6 py-12">
+            <section className="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-6">
                 <Link
                     href="/my-account"
-                    className="inline-flex items-center gap-2 text-foreground/60 hover:text-brown transition-colors mb-6 text-sm font-medium"
+                    className="inline-flex items-center gap-2 text-foreground/60 hover:text-brown transition-colors text-sm font-medium self-start"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back to My Account
@@ -70,11 +74,13 @@ export default async function StatementPage() {
                     <div className="mt-8 pt-6 border-t border-gray-100">
                         <p className="text-xs text-foreground/50 flex items-start gap-2">
                             <Download className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-                            Downloads are generated as PDF. If you don&apos;t see a donation
-                            you expected, please reach out via our contact page.
+                            Statements are generated as PDF and download immediately. If you don&apos;t see a
+                            donation you expected, please reach out via our contact page.
                         </p>
                     </div>
                 </div>
+
+                <PastStatements statements={pastStatements} />
             </section>
         </div>
     );

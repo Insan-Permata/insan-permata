@@ -6,7 +6,10 @@
       "Bash(Select-Object Name)",
       "Bash(git check-ignore *)",
       "Bash(npx tsc *)",
-      "PowerShell(Get-Content *)"
+      "PowerShell(Get-Content *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"console.log\\(require\\('@react-pdf/renderer/package.json'\\).version\\)\")",
+      "Bash(npm run *)"
     ]
   }
 }

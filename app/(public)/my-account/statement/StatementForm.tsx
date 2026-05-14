@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Calendar, CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { FileText, Calendar, CheckCircle, Download } from 'lucide-react';
 import { generateStatement } from '@/lib/actions/statement.actions';
 
 interface StatementFormProps {
@@ -9,13 +10,23 @@ interface StatementFormProps {
 }
 
 type Notice =
-    | { type: 'success'; statementId: string }
+    | { type: 'success'; statementId: string; year: number }
     | { type: 'error'; message: string };
 
 export default function StatementForm({ years }: StatementFormProps) {
+    const router = useRouter();
     const [selectedYear, setSelectedYear] = useState<number>(years[0]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [notice, setNotice] = useState<Notice | null>(null);
+
+    const triggerDownload = (statementId: string, year: number) => {
+        const a = document.createElement('a');
+        a.href = `/api/statement/${statementId}/download`;
+        a.download = `insan-permata-${year}-statement.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
 
     const handleGenerate = async () => {
         setIsGenerating(true);
@@ -24,7 +35,9 @@ export default function StatementForm({ years }: StatementFormProps) {
         const result = await generateStatement(selectedYear);
 
         if (result.success) {
-            setNotice({ type: 'success', statementId: result.statementId });
+            setNotice({ type: 'success', statementId: result.statementId, year: selectedYear });
+            triggerDownload(result.statementId, selectedYear);
+            router.refresh();
         } else {
             setNotice({ type: 'error', message: result.error });
         }
@@ -67,12 +80,12 @@ export default function StatementForm({ years }: StatementFormProps) {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
-                        Generating…
+                        Generating & downloading…
                     </>
                 ) : (
                     <>
                         <FileText className="w-5 h-5" />
-                        Generate {selectedYear} Statement
+                        Generate &amp; Download {selectedYear} Statement
                     </>
                 )}
             </button>
@@ -81,9 +94,17 @@ export default function StatementForm({ years }: StatementFormProps) {
                 <div className="mt-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
-                        <p className="text-sm font-medium text-green-800">Statement recorded successfully</p>
-                        <p className="text-xs text-green-700 mt-0.5 font-mono">{notice.statementId}</p>
-                        <p className="text-xs text-green-600 mt-1">PDF download will be available soon.</p>
+                        <p className="text-sm font-medium text-green-800">Your {notice.year} statement is downloading</p>
+                        <p className="text-xs text-green-700 mt-1">
+                            Didn&apos;t start?{' '}
+                            <a
+                                href={`/api/statement/${notice.statementId}/download`}
+                                className="inline-flex items-center gap-1 underline font-medium"
+                            >
+                                <Download className="w-3 h-3" />
+                                Click here to download again
+                            </a>
+                        </p>
                     </div>
                 </div>
             )}
