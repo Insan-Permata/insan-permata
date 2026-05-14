@@ -20,7 +20,7 @@ export default function FooterComponent() {
               <span className="font-semibold text-lg text-[#292826]">Insan Permata</span>
             </div>
             <p className="text-sm text-[#292826] leading-relaxed max-w-md opacity-90">
-              Ephesians 2:10 - "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
+              Ephesians 2:10 - &ldquo;For we are God&apos;s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do.&rdquo;
             </p>
           </div>
 

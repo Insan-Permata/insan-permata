@@ -55,6 +55,44 @@ function estimateReadMinutes(paragraphs: string[]): number {
   return Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE));
 }
 
+function LanguageToggle({
+  size = "sm",
+  lang,
+  setLang,
+}: {
+  size?: "sm" | "xs";
+  lang: Language;
+  setLang: (lang: Language) => void;
+}) {
+  const padding = size === "xs" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm";
+  return (
+    <div
+      role="group"
+      aria-label="Select language"
+      className="inline-flex items-center rounded-full border border-[#355872]/30 bg-white/60 p-0.5"
+    >
+      {(["en", "id"] as const).map((code) => {
+        const active = lang === code;
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => setLang(code)}
+            aria-pressed={active}
+            className={`${padding} rounded-full font-medium tracking-wide transition-colors ${
+              active
+                ? "bg-[#355872] text-[#F5F5F3]"
+                : "text-[#355872] hover:bg-[#355872]/10"
+            }`}
+          >
+            {code === "en" ? "English" : "Indonesia"}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function FounderStory() {
   const [isOpen, setIsOpen] = useState(false);
   const [lang, setLang] = useState<Language>("en");
@@ -79,36 +117,6 @@ export default function FounderStory() {
     };
   }, [isOpen]);
 
-  const LanguageToggle = ({ size = "sm" }: { size?: "sm" | "xs" }) => {
-    const padding = size === "xs" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm";
-    return (
-      <div
-        role="group"
-        aria-label="Select language"
-        className="inline-flex items-center rounded-full border border-[#355872]/30 bg-white/60 p-0.5"
-      >
-        {(["en", "id"] as const).map((code) => {
-          const active = lang === code;
-          return (
-            <button
-              key={code}
-              type="button"
-              onClick={() => setLang(code)}
-              aria-pressed={active}
-              className={`${padding} rounded-full font-medium tracking-wide transition-colors ${
-                active
-                  ? "bg-[#355872] text-[#F5F5F3]"
-                  : "text-[#355872] hover:bg-[#355872]/10"
-              }`}
-            >
-              {code === "en" ? "English" : "Indonesia"}
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
     <section className="bg-[#F1F0EE] py-16 md:py-24 px-6">
       <div className="max-w-4xl mx-auto text-center">
@@ -120,7 +128,7 @@ export default function FounderStory() {
         </h2>
 
         <div className="flex justify-center mb-8">
-          <LanguageToggle />
+          <LanguageToggle lang={lang} setLang={setLang} />
         </div>
 
         <div className="max-w-3xl mx-auto text-left">
@@ -169,7 +177,7 @@ export default function FounderStory() {
                 >
                   How Insan Permata Began
                 </h3>
-                <LanguageToggle size="xs" />
+                <LanguageToggle size="xs" lang={lang} setLang={setLang} />
               </div>
               <button
                 type="button"

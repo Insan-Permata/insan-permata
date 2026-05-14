@@ -26,8 +26,8 @@ export default function StorageUsageCard() {
                 } else {
                     setError(result.error || 'Failed to fetch storage stats');
                 }
-            } catch (err: any) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Unknown error');
             } finally {
                 setLoading(false);
             }

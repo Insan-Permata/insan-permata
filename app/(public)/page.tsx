@@ -1,19 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import BackgroundCarousel from "./(component)/BackgroundCarousel";
-import ImageCarousel from "./(component)/ImageCarousel";
 import FounderStory from "./(component)/FounderStory";
 import { getCarouselsByType } from '@/lib/repositories/carousels.repository';
 
 export default async function Home() {
-  // Fetch real carousel images from database
-  const [backgroundCarousels, storyCarousels] = await Promise.all([
-    getCarouselsByType('background'),
-    getCarouselsByType('story')
-  ]);
-
+  const backgroundCarousels = await getCarouselsByType('background');
   const backgroundImages = backgroundCarousels.map(c => c.image_url);
-  const storyImages = storyCarousels.map(c => c.image_url);
 
   return (
     <div className="relative w-full">
@@ -32,7 +25,7 @@ export default async function Home() {
           <h1 className="text-5xl md:text-7xl font-normal text-[#F5F5F3] mb-6 max-w-4xl leading-tight tracking-tight drop-shadow-lg">
             A Home for God’s Treasured Children</h1>
           <p className="text-lg md:text-xl font-light text-[#F5F5F3] max-w-2xl leading-relaxed opacity-90 drop-shadow-md">
-            Ephesians 2:10 -  "For we are God’s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."
+            Ephesians 2:10 - &ldquo;For we are God&apos;s handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do.&rdquo;
           </p>
           <Link
             href="/support"
@@ -53,7 +46,7 @@ export default async function Home() {
                 Our Story & Mission
               </h2>
               <p className="text-base md:text-lg text-[#292826] leading-relaxed">
-                For over 20 years, Insan Permata has been more than just a shelter; it has been a sanctuary where every child is seen as a divine masterpiece. Guided by our faith, we provide a loving and stable environment where children can heal, grow, and discover the "good works" God has prepared for them.
+                For over 20 years, Insan Permata has been more than just a shelter; it has been a sanctuary where every child is seen as a divine masterpiece. Guided by our faith, we provide a loving and stable environment where children can heal, grow, and discover the &ldquo;good works&rdquo; God has prepared for them.
               </p>
               <p className="text-base md:text-lg text-[#292826] leading-relaxed">
                 We are committed to empowering these young lives to become compassionate leaders who will shape the future of Indonesia with purpose and hope.

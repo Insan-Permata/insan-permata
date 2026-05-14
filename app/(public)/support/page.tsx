@@ -486,7 +486,7 @@ export default function SupportPage() {
                 How will I know my donation is being used properly?
               </h3>
               <p className="text-[#292826] opacity-70">
-                Donors receive access to our private news section, where we share updates and stories about the children and daily life at Insan Permata. It's our way of keeping you connected to the work your support makes possible.
+                Donors receive access to our private news section, where we share updates and stories about the children and daily life at Insan Permata. It&apos;s our way of keeping you connected to the work your support makes possible.
               </p>
             </div>
             <div>

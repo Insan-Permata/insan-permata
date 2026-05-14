@@ -6,8 +6,8 @@ export async function getStorageStatsAction() {
     try {
         const stats = await getStorageStats();
         return { success: true, data: stats };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error fetching storage stats:', error);
-        return { success: false, error: error.message };
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
     }
 }

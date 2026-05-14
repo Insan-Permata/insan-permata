@@ -8,7 +8,7 @@ export async function createChildAction(formData: FormData) {
     const name = formData.get('name') as string;
     const date_of_birth = formData.get('date_of_birth') as string;
     const gender = formData.get('gender') as 'male' | 'female';
-    const educational_stage = formData.get('educational_stage') as any;
+    const educational_stage = formData.get('educational_stage') as '-' | 'playgroup' | 'kindergarten' | 'elementary' | 'middle_school' | 'high_school' | 'college';
     const interestsStr = formData.get('interests') as string;
     const story = formData.get('story') as string;
     const bible_verse = formData.get('bible_verse') as string;
@@ -42,7 +42,7 @@ export async function updateChildAction(id: string, formData: FormData) {
     const name = formData.get('name') as string;
     const date_of_birth = formData.get('date_of_birth') as string;
     const gender = formData.get('gender') as 'male' | 'female';
-    const educational_stage = formData.get('educational_stage') as any;
+    const educational_stage = formData.get('educational_stage') as '-' | 'playgroup' | 'kindergarten' | 'elementary' | 'middle_school' | 'high_school' | 'college';
     const interestsStr = formData.get('interests') as string;
     const story = formData.get('story') as string;
     const bible_verse = formData.get('bible_verse') as string;

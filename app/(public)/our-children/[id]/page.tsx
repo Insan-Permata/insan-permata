@@ -99,7 +99,7 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                     <div className="md:col-span-2 space-y-8">
                         <div className="bg-white rounded-2xl p-8 shadow-sm">
                             <h2 className="text-3xl font-normal tracking-tight text-foreground mb-6 border-b pb-4">
-                                Hello, I'm {firstName}!
+                                Hello, I&apos;m {firstName}!
                             </h2>
 
                             <div className="space-y-6">

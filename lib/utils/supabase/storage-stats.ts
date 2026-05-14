@@ -19,10 +19,10 @@ export async function getStorageStats(): Promise<StorageStats> {
 
     try {
         // List all files in the bucket
-        const { data: files, error } = await supabase.storage
+        const { error } = await supabase.storage
             .from(bucketName)
             .list('', {
-                limit: 10000, // Adjust if you have more files
+                limit: 10000,
                 sortBy: { column: 'name', order: 'asc' }
             });
 
@@ -31,7 +31,7 @@ export async function getStorageStats(): Promise<StorageStats> {
         }
 
         // Recursively get all files from all folders
-        const allFiles: any[] = [];
+        const allFiles: { metadata?: { size?: number } }[] = [];
         const folders = ['children', 'staff', 'news', 'carousels'];
 
         for (const folder of folders) {
@@ -62,7 +62,7 @@ export async function getStorageStats(): Promise<StorageStats> {
             percentageUsed: parseFloat(percentageUsed.toFixed(2)),
             fileCount: allFiles.length
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error calculating storage stats:', error);
         throw error;
     }

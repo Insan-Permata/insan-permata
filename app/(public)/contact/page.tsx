@@ -35,7 +35,7 @@ export default function ContactPage() {
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-normal tracking-tight text-[#F5F5F3] mb-4 drop-shadow-lg">Get in Touch</h1>
           <p className="text-lg text-[#F5F5F3] opacity-90 max-w-2xl mx-auto drop-shadow-md">
-            We'd love to hear from you. Whether you have a question, want to volunteer, or simply want to learn more about our work.
+            We&apos;d love to hear from you. Whether you have a question, want to volunteer, or simply want to learn more about our work.
           </p>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function ContactPage() {
         <section>
           <h2 className="text-2xl font-normal tracking-tight text-[#292826] text-center mb-3">Reach Us Directly</h2>
           <p className="text-center text-[#292826] opacity-60 mb-10 max-w-xl mx-auto">
-            We'd love to connect. Reach out through any of the channels below.
+            We&apos;d love to connect. Reach out through any of the channels below.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -115,10 +115,10 @@ export default function ContactPage() {
             </div>
           </div>
           <p className="text-white/80 leading-relaxed mb-6 max-w-2xl">
-            Our home is located in Pekanbaru, Indonesia. We warmly welcome visitors, whether you're a donor, a potential volunteer, or simply curious about our work. To protect the privacy and routine of our children, visits are by prior arrangement only.
+            Our home is located in Pekanbaru, Indonesia. We warmly welcome visitors, whether you&apos;re a donor, a potential volunteer, or simply curious about our work. To protect the privacy and routine of our children, visits are by prior arrangement only.
           </p>
           <p className="text-white/80 leading-relaxed max-w-2xl">
-            Reach out via WhatsApp or email to schedule a visit and we'll share the details with you directly.
+            Reach out via WhatsApp or email to schedule a visit and we&apos;ll share the details with you directly.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
             <button
