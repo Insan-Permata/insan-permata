@@ -72,17 +72,17 @@ export default function FounderStory() {
           </p>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="inline-block px-8 py-3 border-2 border-[#355872] text-[#355872] font-semibold rounded-full hover:bg-[#355872] hover:text-[#F5F5F3] transition-all duration-300"
-          >
-            Read the Full Story
-          </button>
+        <div className="mt-8 flex flex-col items-center justify-center gap-2">
           <span className="text-sm text-[#292826]/70 italic">
             {readMinutes} minute read
           </span>
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="px-8 py-3 border-2 border-[#355872] text-[#355872] font-semibold rounded-full hover:bg-[#355872] hover:text-[#F5F5F3] transition-all duration-300"
+          >
+            Read the Full Story
+          </button>
         </div>
       </div>
 
