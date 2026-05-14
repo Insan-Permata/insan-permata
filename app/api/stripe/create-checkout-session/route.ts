@@ -1,22 +1,54 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Always use test key — sk_test_... will be in .env.local
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-02-25.clover',
 })
+
+const MAX_AMOUNT_USD = Number(process.env.DONATION_AMOUNT_MAX_USD ?? 10000)
+const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 type CheckoutBody = {
     email: string
     fullName: string
     amount: number  // in dollars (e.g. 25)
     type: 'once' | 'monthly'
+    turnstileToken?: string | null
+}
+
+async function verifyTurnstile(token: string, remoteIp: string | null): Promise<boolean> {
+    if (!TURNSTILE_SECRET) return true // not configured — skip
+    try {
+        const form = new URLSearchParams()
+        form.append('secret', TURNSTILE_SECRET)
+        form.append('response', token)
+        if (remoteIp) form.append('remoteip', remoteIp)
+
+        const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            body: form,
+        })
+        const data = (await res.json()) as { success: boolean }
+        return Boolean(data.success)
+    } catch (err) {
+        console.error('[Turnstile] verification request failed:', err)
+        return false
+    }
 }
 
 export async function POST(request: NextRequest) {
     try {
+        // --- Origin check (cheap CSRF guard) ---
+        if (SITE_URL) {
+            const origin = request.headers.get('origin')
+            if (origin && origin !== SITE_URL) {
+                return NextResponse.json({ error: 'Invalid origin' }, { status: 403 })
+            }
+        }
+
         const body: CheckoutBody = await request.json()
-        const { email, fullName, amount, type } = body
+        const { email, fullName, amount, type, turnstileToken } = body
 
         // --- Validation ---
         if (!email || !/\S+@\S+\.\S+/.test(email)) {
@@ -29,8 +61,26 @@ export async function POST(request: NextRequest) {
         if (!amount || amount < 5) {
             return NextResponse.json({ error: 'Minimum donation amount is $5' }, { status: 400 })
         }
+        if (amount > MAX_AMOUNT_USD) {
+            return NextResponse.json(
+                { error: `Maximum donation amount is $${MAX_AMOUNT_USD.toLocaleString()}. For larger gifts, please contact us.` },
+                { status: 400 }
+            )
+        }
         if (type !== 'once' && type !== 'monthly') {
             return NextResponse.json({ error: 'Invalid donation type' }, { status: 400 })
+        }
+
+        // --- Turnstile (only enforced when a secret is configured) ---
+        if (TURNSTILE_SECRET) {
+            if (!turnstileToken) {
+                return NextResponse.json({ error: 'Security check missing. Please refresh and try again.' }, { status: 400 })
+            }
+            const remoteIp = request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null
+            const ok = await verifyTurnstile(turnstileToken, remoteIp)
+            if (!ok) {
+                return NextResponse.json({ error: 'Security check failed. Please refresh and try again.' }, { status: 400 })
+            }
         }
 
         // Convert dollars → cents (Stripe uses smallest currency unit)

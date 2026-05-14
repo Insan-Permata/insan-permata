@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import PageHero from '../(component)/PageHero';
+import Turnstile from '../(component)/Turnstile';
+
+const MAX_AMOUNT = 10000;
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 export default function SupportPage() {
   const [donationType, setDonationType] = useState<'once' | 'monthly'>('once');
@@ -14,6 +18,10 @@ export default function SupportPage() {
   const [nameError, setNameError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string>('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const handleTurnstileToken = useCallback((token: string | null) => {
+    setTurnstileToken(token);
+  }, []);
 
   const presetAmounts = [10, 25, 100];
 
@@ -50,6 +58,8 @@ export default function SupportPage() {
     const numValue = parseFloat(value);
     if (value && numValue < 5) {
       setAmountError('Minimum donation amount is $5.00');
+    } else if (value && numValue > MAX_AMOUNT) {
+      setAmountError(`Maximum donation amount is $${MAX_AMOUNT.toLocaleString()}.00. For larger gifts, please contact us.`);
     } else {
       setAmountError('');
     }
@@ -63,6 +73,11 @@ export default function SupportPage() {
       return;
     }
 
+    if (amount > MAX_AMOUNT) {
+      setAmountError(`Maximum donation amount is $${MAX_AMOUNT.toLocaleString()}.00. For larger gifts, please contact us.`);
+      return;
+    }
+
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError('Please enter a valid email address');
       return;
@@ -73,6 +88,11 @@ export default function SupportPage() {
       return;
     }
 
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setServerError('Please complete the security check before donating.');
+      return;
+    }
+
     setIsLoading(true);
     setServerError('');
 
@@ -80,7 +100,13 @@ export default function SupportPage() {
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, fullName: fullName.trim(), amount, type: donationType }),
+        body: JSON.stringify({
+          email,
+          fullName: fullName.trim(),
+          amount,
+          type: donationType,
+          turnstileToken,
+        }),
       });
 
       const data = await response.json();
@@ -313,6 +339,13 @@ export default function SupportPage() {
                 </div>
               )}
             </div>
+
+            {/* Turnstile bot check (only renders if a site key is configured) */}
+            {TURNSTILE_SITE_KEY && (
+              <div className="mb-6 flex justify-center">
+                <Turnstile siteKey={TURNSTILE_SITE_KEY} onToken={handleTurnstileToken} />
+              </div>
+            )}
 
             {/* Server Error */}
             {serverError && (
