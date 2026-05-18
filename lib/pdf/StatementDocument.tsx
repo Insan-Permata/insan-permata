@@ -104,7 +104,7 @@ function formatType(type: string): string {
 const ORG_NAME = 'Acts Ministries International';
 const EIN = process.env.EMPLOYER_IDENTIFICATION_NUMBER ?? 'EIN Not Set';
 const ORG_ADDRESS = '1380 S. Sanderson Ave\nAnaheim, CA 92806 · United States';
-const ORG_CONTACT = 'insanpermata.org · info@insanpermata.org';
+const ORG_CONTACT = 'amichurches.com · info@amichurches.com';
 
 interface Props {
     statement: ContributionStatement;
@@ -128,7 +128,7 @@ export default function StatementDocument({ statement, donations }: Props) {
                     <View>
                         <Text style={s.orgName}>{ORG_NAME}</Text>
                         <Text style={s.orgMeta}>{ORG_ADDRESS}</Text>
-                        <Text style={s.orgMeta}><Link src="https://insanpermata.org" style={{ color: MUTED }}>insanpermata.org</Link> · info@insanpermata.org</Text>
+                        <Text style={s.orgMeta}><Link src="https://amichurches.com" style={{ color: MUTED }}>amichurches.com</Link> · info@amichurches.com</Text>
                     </View>
                     <View>
                         <Text style={s.einText}>EIN: {EIN}</Text>
@@ -194,7 +194,7 @@ export default function StatementDocument({ statement, donations }: Props) {
                         Pekanbaru, Indonesia. This gift was made through insanpermata.org. Insan Permata is
                         the public name of this ministry; {ORG_NAME} is the U.S. 501(c)(3) entity that
                         receives, controls, and disburses these funds on its behalf. For any question about
-                        this statement, contact info@insanpermata.org.
+                        this statement, contact info@amichurches.com.
                     </Text>
                 </View>
 
@@ -206,7 +206,7 @@ export default function StatementDocument({ statement, donations }: Props) {
 
                 {/* Footer */}
                 <View style={s.footer} fixed>
-                    <Text style={s.footerText}>{ORG_NAME} · <Link src="https://insanpermata.org" style={{ color: LIGHT }}>insanpermata.org</Link></Text>
+                    <Text style={s.footerText}>{ORG_NAME} · <Link src="https://amichurches.com" style={{ color: LIGHT }}>amichurches.com</Link></Text>
                     <Text style={s.footerText}>Statement ID: {statement.id}</Text>
                     <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
                 </View>
