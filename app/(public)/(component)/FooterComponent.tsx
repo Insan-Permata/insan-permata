@@ -72,6 +72,9 @@ export default function FooterComponent() {
         <div className="pt-8 border-t border-[#292826] border-opacity-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[#292826] opacity-80">
             {copyrightText}
+            <span className="block mt-1 opacity-80">
+              Donations processed by Acts Ministries International
+            </span>
           </p>
           <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             {LEGAL_LINKS.map((link) => (
