@@ -5,19 +5,19 @@ export const metadata = {
     description: 'How Insan Permata collects, uses, and protects your personal information.',
 };
 
-const LAST_UPDATED = 'May 14, 2026';
+const LAST_UPDATED = 'May 18, 2026';
 
 export default function PrivacyPolicyPage() {
     return (
         <LegalPageLayout
             title="Privacy Policy"
             lastUpdated={LAST_UPDATED}
-            intro="This policy describes what personal information we collect when you donate to or interact with Insan Permata, how we use it, who we share it with, and the choices you have. Insan Permata is operated as an Indonesian charitable home for children, with online donations facilitated to support our mission."
+            intro="This policy describes what personal information we collect when you donate or interact with this site, how we use it, who we share it with, and the choices you have."
         >
             <section>
                 <h2>Who we are</h2>
                 <p>
-                    &quot;Insan Permata&quot; (also referred to as &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) refers to Panti Asuhan Insan Permata, a children&apos;s home based in Pekanbaru, Indonesia. You can reach us by email at <a href="mailto:info@insanpermata.org">info@insanpermata.org</a> for any privacy-related question or request described in this policy.
+                    This website is operated by <strong>Acts Ministries International</strong> (&quot;AMI&quot;, also referred to as &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;), a 501(c)(3) nonprofit organization based in Anaheim, California, United States, in partnership with Panti Asuhan Insan Permata, a children&apos;s home in Pekanbaru, Indonesia. All donations are received and processed by AMI, and AMI is the controller of the personal information described in this policy. AMI raises and grants funds in support of the home. You can reach us by email at <a href="mailto:info@insanpermata.org">info@insanpermata.org</a> for any privacy-related question or request described in this policy.
                 </p>
             </section>
 
@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
 
                 <h3>Information we receive from Stripe</h3>
                 <p>
-                    After a successful donation, Stripe sends us a confirmation that includes: your donation amount, currency, paid status, a Stripe customer identifier, a session identifier, and (for monthly donations) a subscription identifier. We store these alongside your email and donor name to issue receipts and prepare your year-end contribution statement.
+                    After a successful donation, Stripe sends AMI a confirmation that includes: your donation amount, currency, paid status, a Stripe customer identifier, a session identifier, and (for monthly donations) a subscription identifier. We store these alongside your email and donor name to issue receipts and prepare your year-end contribution statement.
                 </p>
 
                 <h3>Information collected automatically</h3>
@@ -147,7 +147,7 @@ export default function PrivacyPolicyPage() {
                 <p>
                     Email: <a href="mailto:info@insanpermata.org">info@insanpermata.org</a>
                     <br />
-                    Postal: Panti Asuhan Insan Permata, Pekanbaru, Indonesia
+                    Postal: Acts Ministries International, 1380 S. Sanderson Ave, Anaheim, CA 92806, United States
                 </p>
             </section>
         </LegalPageLayout>

@@ -5,7 +5,7 @@ export const metadata = {
     description: 'How refunds and recurring-donation cancellations are handled at Insan Permata.',
 };
 
-const LAST_UPDATED = 'May 14, 2026';
+const LAST_UPDATED = 'May 18, 2026';
 
 export default function RefundPolicyPage() {
     return (
@@ -15,6 +15,13 @@ export default function RefundPolicyPage() {
             intro="We&apos;re grateful for every gift. This policy explains how refunds and monthly-donation cancellations work."
         >
             <section>
+                <h2>Who handles refunds</h2>
+                <p>
+                    Donations are received and processed by Acts Ministries International (&quot;AMI&quot;), a 501(c)(3) nonprofit in Anaheim, California, which raises and grants funds in support of Panti Asuhan Insan Permata in Indonesia. All refunds are issued by AMI through Stripe to your original payment method. Once AMI has granted contributed funds onward in support of the home, a refund may no longer be possible.
+                </p>
+            </section>
+
+            <section>
                 <h2>One-time donations</h2>
                 <p>
                     Donations are generally considered final once they have been processed by Stripe and recorded on our side. That said, we understand mistakes happen.
@@ -22,7 +29,7 @@ export default function RefundPolicyPage() {
                 <ul>
                     <li>If you donated by mistake (wrong amount, duplicate charge, or unauthorized use of your payment method), email <a href="mailto:info@insanpermata.org">info@insanpermata.org</a> within <strong>30 days</strong> of the charge with the date, amount, and the email used to donate.</li>
                     <li>We&apos;ll review the request and, if it qualifies, refund the full amount back to your original payment method via Stripe. Refunds typically appear within 5–10 business days, depending on your card issuer.</li>
-                    <li>Refunds requested outside the 30-day window are considered on a case-by-case basis and may not be possible if the funds have already been allocated to operational expenses.</li>
+                    <li>Refunds requested outside the 30-day window are considered on a case-by-case basis and may not be possible if the funds have already been granted onward in support of the home.</li>
                 </ul>
             </section>
 

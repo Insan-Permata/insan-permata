@@ -508,10 +508,18 @@ export default function SupportPage() {
           <div className="space-y-6 max-w-3xl mx-auto">
             <div>
               <h3 className="text-lg font-semibold text-[#292826] mb-2">
+                Who processes my donation?
+              </h3>
+              <p className="text-[#292826] opacity-70">
+                Donations are received and processed by Acts Ministries International (AMI), a U.S. 501(c)(3) nonprofit based in Anaheim, California. AMI raises funds for, and grants them in support of, Panti Asuhan Insan Permata in Indonesia. AMI retains full discretion and control over how contributed funds are used.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[#292826] mb-2">
                 Is my donation tax-deductible?
               </h3>
               <p className="text-[#292826] opacity-70">
-                Yes! Once your donor account is set up, you can log in and generate your contribution statement directly from your account.
+                For U.S. taxpayers, donations to AMI are generally tax-deductible to the extent allowed by law (AMI&apos;s EIN appears on your receipt and statement). Once your donor account is set up, you can log in and generate your year-end contribution statement directly from your account. Please consult your tax advisor for your specific situation.
               </p>
             </div>
             <div>
@@ -529,15 +537,6 @@ export default function SupportPage() {
               <p className="text-[#292826] opacity-70">
                 Yes! We welcome visitors. Please contact us in advance to schedule a visit so we can
                 ensure the best experience for both you and our children.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-[#292826] mb-2">
-                Can I sponsor a specific child?
-              </h3>
-              <p className="text-[#292826] opacity-70">
-                We appreciate your interest in child sponsorship. Please contact us directly to discuss
-                sponsorship opportunities and learn more about how you can make a lasting impact.
               </p>
             </div>
           </div>

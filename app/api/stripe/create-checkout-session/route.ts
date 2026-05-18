@@ -95,8 +95,8 @@ export async function POST(request: NextRequest) {
                 currency: 'usd',
                 unit_amount: unitAmount,
                 product_data: {
-                    name: isSubscription ? 'Monthly Donation – Insan Permata' : 'One-time Donation – Insan Permata',
-                    description: 'Supporting children at Panti Asuhan Insan Permata',
+                    name: isSubscription ? 'Monthly Donation – Acts Ministries International' : 'One-time Donation – Acts Ministries International',
+                    description: 'Donation to Acts Ministries International in support of Panti Asuhan Insan Permata',
                 },
                 ...(isSubscription && {
                     recurring: { interval: 'month' },

@@ -5,7 +5,7 @@ export const metadata = {
     description: 'How Insan Permata safeguards the children in our care when sharing their stories with supporters.',
 };
 
-const LAST_UPDATED = 'May 14, 2026';
+const LAST_UPDATED = 'May 18, 2026';
 
 export default function ChildProtectionPolicyPage() {
     return (
@@ -17,7 +17,7 @@ export default function ChildProtectionPolicyPage() {
             <section>
                 <h2>Our commitment</h2>
                 <p>
-                    Every child living at Panti Asuhan Insan Permata has a right to safety, dignity, and privacy. When we share photos or stories about them — to communicate our work to supporters — those rights come first, and the supporter relationship comes second. We will always choose to share less rather than to share more.
+                    Every child living at Panti Asuhan Insan Permata has a right to safety, dignity, and privacy. This website and its donor area are operated by Acts Ministries International (&quot;AMI&quot;) in partnership with the home; AMI raises funds in support of the home, and AMI and the home together apply the safeguards in this policy. When we share photos or stories about the children — to communicate the work of the home to supporters — those rights come first, and the supporter relationship comes second. We will always choose to share less rather than to share more.
                 </p>
             </section>
 
