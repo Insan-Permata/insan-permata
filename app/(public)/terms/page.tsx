@@ -45,7 +45,7 @@ export default function TermsPage() {
             <section>
                 <h2>4. Tax treatment</h2>
                 <p>
-                    AMI is a tax-exempt charitable organization under Section 501(c)(3) of the U.S. Internal Revenue Code. For U.S. taxpayers, donations to AMI are generally tax-deductible to the extent allowed by law, because AMI retains full discretion and control over contributed funds (donations are not earmarked as a pass-through to a foreign organization). AMI&apos;s Employer Identification Number (EIN) appears on your donation receipt and on the year-end contribution statement available from your donor account. Deductibility for donors outside the United States depends on local tax law. Please consult your tax advisor to confirm deductibility for your situation.
+                    AMI is a tax-exempt charitable organization under Section 501(c)(3) of the U.S. Internal Revenue Code. For U.S. taxpayers, donations to AMI are generally tax-deductible to the extent allowed by law, because AMI retains full discretion and control over contributed funds (donations are not earmarked as a pass-through to a foreign organization). AMI&apos;s Employer Identification Number (EIN) appears on your donation receipt and on the year-end contribution statement available from your donor account. Access to the private donor area and the updates and stories shared there is an incidental, intangible benefit that does not constitute goods or services in exchange for your gift and does not reduce its deductible amount. Deductibility for donors outside the United States depends on local tax law. Please consult your tax advisor to confirm deductibility for your situation.
                 </p>
             </section>
 

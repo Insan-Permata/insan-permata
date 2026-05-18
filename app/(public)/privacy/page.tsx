@@ -112,6 +112,30 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
+                <h2>Donors in the EU, EEA, and UK</h2>
+                <p>
+                    If you donate from the European Union, the European Economic Area, or the United Kingdom, the EU/UK General Data Protection Regulation (GDPR) applies to our processing of your personal information, in addition to the rights described above.
+                </p>
+                <p>
+                    <strong>Lawful bases.</strong> We process your personal information on the following bases:
+                </p>
+                <ul>
+                    <li><strong>Performance of a contract</strong> (Art. 6(1)(b)) — to process your donation, issue your receipt, and operate your optional donor account.</li>
+                    <li><strong>Legal obligation</strong> (Art. 6(1)(c)) — to keep donation and tax records as required by applicable law.</li>
+                    <li><strong>Legitimate interests</strong> (Art. 6(1)(f)) — to secure the site, prevent fraud and abuse, and report on our work in aggregate, balanced against your rights and freedoms.</li>
+                </ul>
+                <p>
+                    <strong>International transfers.</strong> Our processors are located in the United States, so your personal information is transferred to and processed in the U.S. Where we transfer your data to provide the services you request, we rely on the transfer derogation for performance of a contract with you (Art. 49(1)(b)). Our processors additionally apply their own transfer safeguards, including the EU Standard Contractual Clauses where they offer them.
+                </p>
+                <p>
+                    <strong>Your GDPR rights.</strong> In addition to the rights listed above, you have the right to access, rectify, erase, restrict, or object to our processing of your personal information, the right to data portability, and the right to withdraw consent where processing is based on consent (without affecting prior processing). To exercise these rights, email <a href="mailto:info@insanpermata.org">info@insanpermata.org</a>.
+                </p>
+                <p>
+                    <strong>Supervisory authority.</strong> You have the right to lodge a complaint with your local data protection supervisory authority — in the UK, the Information Commissioner&apos;s Office (ICO); in the EU/EEA, the authority in your country of residence — if you believe our processing of your personal information infringes applicable law.
+                </p>
+            </section>
+
+            <section>
                 <h2>Cookies</h2>
                 <p>
                     We use a single strictly-necessary cookie set by Supabase to keep you signed in to your donor account. We do not use analytics, advertising, or third-party tracking cookies. Because this cookie is required for the site to function, no consent banner is shown.
@@ -138,7 +162,7 @@ export default function PrivacyPolicyPage() {
             <section>
                 <h2>Changes to this policy</h2>
                 <p>
-                    We may update this policy from time to time. The &quot;Last updated&quot; date at the top of this page reflects the latest revision. Material changes will be communicated to active donor accounts by email.
+                    We may update this policy from time to time. The &quot;Last updated&quot; date at the top of this page reflects the latest revision. Your continued use of the site after a revised policy is posted constitutes your acceptance of the revised policy.
                 </p>
             </section>
 
