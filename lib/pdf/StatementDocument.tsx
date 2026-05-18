@@ -97,12 +97,14 @@ function formatDate(iso: string): string {
 }
 
 function formatType(type: string): string {
-    return type === 'subscription' ? 'Monthly Donation' : 'One-Time Donation';
+    const base = type === 'subscription' ? 'Monthly Donation' : 'One-Time Donation';
+    return `${base} – in support of Panti Asuhan Insan Permata`;
 }
 
+const ORG_NAME = 'Acts Ministries International';
 const EIN = process.env.EMPLOYER_IDENTIFICATION_NUMBER ?? 'EIN Not Set';
-const ORG_ADDRESS = '123 Charitable Way, Suite 200\nNew York, NY 10001 · United States';
-const ORG_CONTACT = 'insanpermata.org · contact@insanpermata.org';
+const ORG_ADDRESS = '1380 S. Sanderson Ave\nAnaheim, CA 92806 · United States';
+const ORG_CONTACT = 'amichurches.com · info@amichurches.com';
 
 interface Props {
     statement: ContributionStatement;
@@ -116,17 +118,17 @@ export default function StatementDocument({ statement, donations }: Props) {
 
     return (
         <Document
-            title={`Insan Permata Contribution Statement ${statement.year}`}
-            author="Insan Permata"
+            title={`Acts Ministries International Contribution Statement ${statement.year}`}
+            author={ORG_NAME}
         >
             <Page size="A4" style={s.page}>
 
                 {/* Header */}
                 <View style={s.headerRow}>
                     <View>
-                        <Text style={s.orgName}>Insan Permata</Text>
+                        <Text style={s.orgName}>{ORG_NAME}</Text>
                         <Text style={s.orgMeta}>{ORG_ADDRESS}</Text>
-                        <Text style={s.orgMeta}><Link src="https://insanpermata.org" style={{ color: MUTED }}>insanpermata.org</Link> · contact@insanpermata.org</Text>
+                        <Text style={s.orgMeta}><Link src="https://amichurches.com" style={{ color: MUTED }}>amichurches.com</Link> · info@amichurches.com</Text>
                     </View>
                     <View>
                         <Text style={s.einText}>EIN: {EIN}</Text>
@@ -184,9 +186,12 @@ export default function StatementDocument({ statement, donations }: Props) {
                 {/* Disclaimer */}
                 <View style={s.disclaimerBlock}>
                     <Text style={s.disclaimerText}>
-                        No goods or services were provided by Insan Permata in exchange for this contribution.
-                        Please retain this statement for your tax records. Insan Permata is a tax-exempt
-                        organization. Contributions may be deductible as charitable donations under applicable law.
+                        {ORG_NAME} is a tax-exempt organization under Section 501(c)(3) of the U.S. Internal
+                        Revenue Code (EIN above). No goods or services were provided in exchange for these
+                        contributions. Contributions are tax-deductible to the extent allowed by law; please
+                        retain this statement for your tax records. {ORG_NAME} raises and grants funds, at its
+                        sole discretion, in support of Panti Asuhan Insan Permata, a children&apos;s home in
+                        Pekanbaru, Indonesia. This gift was made through insanpermata.org.
                     </Text>
                 </View>
 
@@ -198,7 +203,7 @@ export default function StatementDocument({ statement, donations }: Props) {
 
                 {/* Footer */}
                 <View style={s.footer} fixed>
-                    <Text style={s.footerText}>Insan Permata · <Link src="https://insanpermata.org" style={{ color: LIGHT }}>insanpermata.org</Link></Text>
+                    <Text style={s.footerText}>{ORG_NAME} · <Link src="https://amichurches.com" style={{ color: LIGHT }}>amichurches.com</Link></Text>
                     <Text style={s.footerText}>Statement ID: {statement.id}</Text>
                     <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
                 </View>
