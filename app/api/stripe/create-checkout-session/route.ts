@@ -106,6 +106,12 @@ export async function POST(request: NextRequest) {
 
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
+        const EIN = process.env.EMPLOYER_IDENTIFICATION_NUMBER ?? ''
+        const invoiceFooter =
+            `Acts Ministries International${EIN ? `, EIN ${EIN},` : ''} is a 501(c)(3) tax-exempt organization. ` +
+            'No goods or services were provided in exchange for this contribution. ' +
+            'Please retain this receipt for your tax records.'
+
         const session = await stripe.checkout.sessions.create({
             mode: isSubscription ? 'subscription' : 'payment',
             customer_email: email,
@@ -117,11 +123,19 @@ export async function POST(request: NextRequest) {
                 donor_name: trimmedName,
                 donation_type: type,
             },
+            // One-time payments don't auto-generate an invoice; enable it so donors
+            // receive a PDF with the statutory 501(c)(3) disclosure footer.
+            ...(!isSubscription && {
+                invoice_creation: {
+                    enabled: true,
+                    invoice_data: {
+                        footer: invoiceFooter,
+                    },
+                },
+            }),
             success_url: `${baseUrl}/support/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${baseUrl}/support/cancel`,
-            // Allow promotion codes on the checkout page (optional)
             allow_promotion_codes: false,
-            // Billing address collection — off to keep UX simple
             billing_address_collection: 'auto',
         })
 
