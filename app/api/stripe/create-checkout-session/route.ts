@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/utils/supabase/server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-02-25.clover',
@@ -48,7 +49,14 @@ export async function POST(request: NextRequest) {
         }
 
         const body: CheckoutBody = await request.json()
-        const { email, fullName, amount, type, turnstileToken } = body
+        const { email: formEmail, fullName, amount, type, turnstileToken } = body
+
+        // If the request comes from an authenticated session, use the verified account
+        // email — ignoring whatever the form sent — so donations always land on the
+        // correct account and can't be misdirected by editing the form payload.
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        const email = user?.email ?? formEmail
 
         // --- Validation ---
         if (!email || !/\S+@\S+\.\S+/.test(email)) {
