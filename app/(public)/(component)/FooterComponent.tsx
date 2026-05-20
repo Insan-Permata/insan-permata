@@ -51,14 +51,14 @@ export default function FooterComponent() {
             {/* Social Media */}
             <div className="flex items-center gap-3">
               <button
-                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
+                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200 cursor-pointer"
                 onClick={() => window.open(instagramUrl, '_blank')}
                 aria-label="Visit our Instagram page"
               >
                 <Instagram className="h-4 w-4 text-[#F5F5F3]" />
               </button>
               <button
-                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200"
+                className="h-9 w-9 rounded-md bg-[#355872] flex items-center justify-center hover:bg-[#2a4a61] transition-colors duration-200 cursor-pointer"
                 onClick={() => window.open(youtubeUrl, '_blank')}
                 aria-label="Visit our YouTube channel"
               >
