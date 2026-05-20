@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, Heart, Mail, Calendar, Clock } from 'lucide-react';
+import { FileText, Heart, Mail, Calendar, Clock, Download } from 'lucide-react';
 import PageHero from '../(component)/PageHero';
 import Breadcrumbs from '../(component)/Breadcrumbs';
 import { createClient } from '@/lib/utils/supabase/server';
@@ -161,6 +161,7 @@ export default async function MyAccountPage() {
                                         <th className="text-left text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Year</th>
                                         <th className="text-right text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Total</th>
                                         <th className="text-left text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Generated</th>
+                                        <th className="text-right text-xs font-semibold uppercase tracking-wide text-foreground/60 px-6 py-3">Download</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
@@ -171,9 +172,22 @@ export default async function MyAccountPage() {
                                             <td className="px-6 py-4 text-sm font-semibold text-foreground text-right">
                                                 {formatDollarAmount(s.total_amount, s.currency)}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-foreground/60 flex items-center gap-1.5">
-                                                <Clock className="w-3.5 h-3.5 flex-shrink-0" />
-                                                {formatDateTime(s.generated_at)}
+                                            <td className="px-6 py-4 text-sm text-foreground/60">
+                                                <span className="inline-flex items-center gap-1.5">
+                                                    <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                                                    {formatDateTime(s.generated_at)}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <a
+                                                    href={`/api/statement/${s.id}/download`}
+                                                    download={`insan-permata-${s.year}-statement.pdf`}
+                                                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#355872] hover:opacity-70 transition-opacity border border-[#355872]/30 rounded-lg px-3 py-1.5"
+                                                    aria-label={`Download ${s.year} statement`}
+                                                >
+                                                    <Download className="w-3.5 h-3.5" />
+                                                    PDF
+                                                </a>
                                             </td>
                                         </tr>
                                     ))}
@@ -185,13 +199,22 @@ export default async function MyAccountPage() {
                         <ul className="md:hidden divide-y divide-gray-100">
                             {statements.map((s) => (
                                 <li key={s.id} className="p-5">
-                                    <div className="flex items-start justify-between mb-2">
-                                        <div>
+                                    <div className="flex items-start justify-between gap-3 mb-2">
+                                        <div className="min-w-0">
                                             <p className="font-semibold text-foreground">{formatDollarAmount(s.total_amount, s.currency)}</p>
                                             <p className="text-sm text-foreground/60">Tax year {s.year}</p>
                                         </div>
+                                        <a
+                                            href={`/api/statement/${s.id}/download`}
+                                            download={`insan-permata-${s.year}-statement.pdf`}
+                                            className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#355872] hover:opacity-70 transition-opacity border border-[#355872]/30 rounded-lg px-3 py-1.5"
+                                            aria-label={`Download ${s.year} statement`}
+                                        >
+                                            <Download className="w-3.5 h-3.5" />
+                                            PDF
+                                        </a>
                                     </div>
-                                    <p className="font-mono text-xs text-foreground/50 mb-1">{s.id}</p>
+                                    <p className="font-mono text-xs text-foreground/50 mb-1 break-all">{s.id}</p>
                                     <p className="text-xs text-foreground/50 flex items-center gap-1">
                                         <Clock className="w-3 h-3" />
                                         {formatDateTime(s.generated_at)}
