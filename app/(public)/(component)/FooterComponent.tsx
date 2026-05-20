@@ -15,7 +15,7 @@ export default function FooterComponent() {
   const copyrightText = `© ${currentYear} Insan Permata`;
   const instagramUrl = 'https://www.instagram.com/insanpermata_home/';
   const youtubeUrl = 'https://www.youtube.com/@insanpermatahome6342';
-  const phoneNumber = '+62 812 3456 7890';
+  const phoneNumber = '+62 851 6354 0045';
   const email = 'info@insanpermata.org';
 
   return (

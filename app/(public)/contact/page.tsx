@@ -2,7 +2,7 @@
 
 import { Mail, MessageCircle, Instagram, MapPin } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '6281234567890';
+const WHATSAPP_NUMBER = '6285163540045';
 const EMAIL = 'info@insanpermata.org';
 const INSTAGRAM_URL = 'https://www.instagram.com/insanpermata_home/';
 
