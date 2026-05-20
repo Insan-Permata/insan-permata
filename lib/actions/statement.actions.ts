@@ -9,6 +9,17 @@ export type GenerateStatementResult =
     | { success: false; error: string };
 
 export async function generateStatement(year: number): Promise<GenerateStatementResult> {
+    // Refuse to record a statement we can't render into a compliant PDF.
+    // The PDF render path also throws on a missing EIN; we catch it here so
+    // donors see a clear message instead of a 500 at download time.
+    if (!process.env.EMPLOYER_IDENTIFICATION_NUMBER?.trim()) {
+        console.error('[generateStatement] EMPLOYER_IDENTIFICATION_NUMBER is unset; refusing to issue statement.');
+        return {
+            success: false,
+            error: 'Statement generation is temporarily unavailable. Please contact info@insanpermata.org for help.',
+        };
+    }
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 

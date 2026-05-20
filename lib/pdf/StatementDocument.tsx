@@ -102,9 +102,22 @@ function formatType(type: string): string {
 }
 
 const ORG_NAME = 'Acts Ministries International';
-const EIN = process.env.EMPLOYER_IDENTIFICATION_NUMBER ?? 'EIN Not Set';
 const ORG_ADDRESS = '1380 S. Sanderson Ave\nAnaheim, CA 92806 · United States';
 const ORG_CONTACT = 'amichurches.com · info@amichurches.com';
+
+// Hard-fail rather than render a non-compliant IRC §170(f)(8) acknowledgment.
+// An EIN is a required element of the tax substantiation receipt — emitting
+// "EIN: EIN Not Set" or a blank EIN would mislead the donor at tax time.
+export function getRequiredEIN(): string {
+    const ein = process.env.EMPLOYER_IDENTIFICATION_NUMBER?.trim();
+    if (!ein) {
+        throw new Error(
+            'EMPLOYER_IDENTIFICATION_NUMBER env var is missing. ' +
+            'Refusing to generate a contribution statement without a valid EIN.'
+        );
+    }
+    return ein;
+}
 
 interface Props {
     statement: ContributionStatement;
@@ -112,6 +125,7 @@ interface Props {
 }
 
 export default function StatementDocument({ statement, donations }: Props) {
+    const ein = getRequiredEIN();
     const taxPeriod = `January 1, ${statement.year} – December 31, ${statement.year}`;
     const issueDate = formatDate(statement.generated_at);
     const donorDisplay = statement.donor_name ?? statement.email;
@@ -131,7 +145,7 @@ export default function StatementDocument({ statement, donations }: Props) {
                         <Text style={s.orgMeta}><Link src="https://amichurches.com" style={{ color: MUTED }}>amichurches.com</Link> · info@amichurches.com</Text>
                     </View>
                     <View>
-                        <Text style={s.einText}>EIN: {EIN}</Text>
+                        <Text style={s.einText}>EIN: {ein}</Text>
                     </View>
                 </View>
                 <View style={s.headerDivider} />
