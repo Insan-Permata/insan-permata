@@ -125,10 +125,11 @@ export default function LoginPage() {
 
                         {/* Footer */}
                         <p className="text-center text-sm text-foreground/50 mt-6">
-                            Don&apos;t have an account?{' '}
-                            <span className="text-foreground/50 cursor-not-allowed">
-                                Contact us
-                            </span>
+                            Accounts are created automatically when you donate.{' '}
+                            <Link href="/support" className="text-brown font-medium hover:underline">
+                                Give now
+                            </Link>{' '}
+                            and you&apos;ll receive an invite by email.
                         </p>
                     </div>
                 </div>
