@@ -82,6 +82,14 @@ export default async function SupportPage() {
           <div className="space-y-6 max-w-3xl mx-auto">
             <div>
               <h3 className="text-lg font-semibold text-[#292826] mb-2">
+                How do I get access to my donor account?
+              </h3>
+              <p className="text-[#292826] opacity-70">
+                No sign-up needed. After your first donation is processed, you&apos;ll automatically receive an invite email with a link to set your password. Once set, you can log in at any time to view your donation history and download your year-end contribution statement.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[#292826] mb-2">
                 Who processes my donation?
               </h3>
               <p className="text-[#292826] opacity-70">
