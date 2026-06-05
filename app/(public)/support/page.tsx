@@ -101,7 +101,7 @@ export default async function SupportPage() {
                 How will I know my donation is being used properly?
               </h3>
               <p className="text-[#292826] opacity-70">
-                Donors receive access to our private news section, where we share occasional updates and stories from the children and daily life at Insan Permata. We post when there&apos;s news worth telling — our aim is honest, unhurried storytelling rather than a fixed publishing schedule.
+                All donations are processed, managed, and disbursed by AMI. Donors receive access to our private news section, where we share frequent updates and stories from the children and daily life at Insan Permata.
               </p>
             </div>
             <div>
