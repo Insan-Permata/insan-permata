@@ -85,6 +85,7 @@ export type Database = {
           photo_url: string | null
           story: string | null
           updated_at: string | null
+          youtube_url: string | null
         }
         Insert: {
           bible_verse?: string | null
@@ -101,6 +102,7 @@ export type Database = {
           photo_url?: string | null
           story?: string | null
           updated_at?: string | null
+          youtube_url?: string | null
         }
         Update: {
           bible_verse?: string | null
@@ -117,6 +119,7 @@ export type Database = {
           photo_url?: string | null
           story?: string | null
           updated_at?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }
