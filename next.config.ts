@@ -16,7 +16,7 @@ const csp = [
   `img-src 'self' data: blob:${supabaseHostname ? ` https://${supabaseHostname}` : ''}`,
   `font-src 'self' data:`,
   `connect-src 'self'${supabaseHostname ? ` https://${supabaseHostname} wss://${supabaseHostname}` : ''} https://api.stripe.com https://challenges.cloudflare.com`,
-  `frame-src https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com`,
+  `frame-src https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com https://www.youtube.com`,
   `frame-ancestors 'none'`,
   `base-uri 'self'`,
   `form-action 'self' https://checkout.stripe.com`,

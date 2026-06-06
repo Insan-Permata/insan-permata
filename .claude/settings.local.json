@@ -12,7 +12,9 @@
       "Bash(npm run *)",
       "Bash(git -C \"C:\\\\Users\\\\josua\\\\Documents\\\\Personal Project\\\\insan-permata\" ls-files)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\josua\\\\Documents\\\\Personal Project\\\\insan-permata\\\\app\\\\\\(public\\)\" -Recurse | Select-Object Name, FullName | Where-Object {$_.Name -match 'support|donate'})",
-      "PowerShell(head *)"
+      "PowerShell(head *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx|sql|js|jsx\\)$\")",
+      "Bash(grep -A 50 \"-- 2. Create CHILDREN table\" /Users/josua/Documents/Personal/insan-permata/lib/utils/supabase/migrations/init.sql)"
     ]
   }
 }

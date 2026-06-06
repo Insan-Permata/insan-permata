@@ -49,9 +49,29 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
         return null;
     };
 
+    const getYouTubeEmbedUrl = (url: string): string | null => {
+        try {
+            const u = new URL(url);
+            let videoId: string | null = null;
+            if (u.hostname === 'youtu.be') {
+                videoId = u.pathname.slice(1).split('?')[0];
+            } else if (u.hostname.includes('youtube.com')) {
+                if (u.pathname === '/watch') {
+                    videoId = u.searchParams.get('v');
+                } else if (u.pathname.startsWith('/embed/')) {
+                    videoId = u.pathname.split('/embed/')[1].split('?')[0];
+                }
+            }
+            return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+        } catch {
+            return null;
+        }
+    };
+
     const age = calculateAge(child.date_of_birth);
     const ageGroup = getAgeGroup(age);
     const firstName = child.name.split(' ')[0];
+    const embedUrl = child.youtube_url ? getYouTubeEmbedUrl(child.youtube_url) : null;
 
     return (
         <div className="min-h-screen bg-background">
@@ -160,6 +180,25 @@ export default async function ChildDetailPage({ params }: ChildDetailPageProps) 
                                         <blockquote className="border-l-4 border-brown pl-4 italic text-foreground/80 text-lg my-2">
                                             {child.bible_verse}
                                         </blockquote>
+                                    </div>
+                                )}
+
+                                {embedUrl && (
+                                    <div>
+                                        <h3 className="text-sm uppercase tracking-wider text-gray-500 font-semibold mb-3">
+                                            Video
+                                        </h3>
+                                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                                            <iframe
+                                                className="absolute top-0 left-0 w-full h-full rounded-xl"
+                                                src={embedUrl}
+                                                title="YouTube video player"
+                                                frameBorder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                referrerPolicy="strict-origin-when-cross-origin"
+                                                allowFullScreen
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>

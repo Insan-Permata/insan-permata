@@ -201,6 +201,20 @@ export default function NewChildPage() {
                     />
                 </div>
 
+                {/* YouTube Video */}
+                <div>
+                    <label htmlFor="youtube_url" className="block text-sm font-medium text-foreground mb-2">
+                        YouTube Video URL <span className="text-foreground/50 font-normal">(optional)</span>
+                    </label>
+                    <input
+                        type="url"
+                        id="youtube_url"
+                        name="youtube_url"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brown focus:border-transparent"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                    />
+                </div>
+
                 {/* Form Actions */}
                 <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
                     <Link

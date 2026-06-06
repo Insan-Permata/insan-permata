@@ -14,6 +14,7 @@ export async function createChildAction(formData: FormData) {
     const bible_verse = formData.get('bible_verse') as string;
     const joined_date = formData.get('joined_date') as string;
     const photo_url = formData.get('photo_url') as string;
+    const youtube_url = formData.get('youtube_url') as string;
 
     let interests: string[] = [];
     try {
@@ -32,6 +33,7 @@ export async function createChildAction(formData: FormData) {
         photo_url: photo_url || null,
         joined_date: joined_date || null,
         bible_verse,
+        youtube_url: youtube_url || null,
     });
 
     revalidatePath('/admin/children');
@@ -48,6 +50,7 @@ export async function updateChildAction(id: string, formData: FormData) {
     const bible_verse = formData.get('bible_verse') as string;
     const joined_date = formData.get('joined_date') as string;
     const photo_url = formData.get('photo_url') as string;
+    const youtube_url = formData.get('youtube_url') as string;
 
     let interests: string[] | undefined = undefined;
     if (interestsStr) {
@@ -68,6 +71,7 @@ export async function updateChildAction(id: string, formData: FormData) {
         bible_verse,
         ...(photo_url ? { photo_url } : {}),
         joined_date: joined_date || null,
+        youtube_url: youtube_url || null,
     });
 
     revalidatePath('/admin/children');
