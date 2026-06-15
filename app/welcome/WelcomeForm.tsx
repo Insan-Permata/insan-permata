@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { Loader2, Eye, EyeOff, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { setInitialPassword } from './actions'
@@ -8,6 +9,32 @@ import { checkPasswordStrength, type StrengthLevel } from './password-strength'
 
 interface WelcomeFormProps {
     email: string
+}
+
+/**
+ * Submit button with a pending spinner. Lives as a child of <form> so it can
+ * read useFormStatus() — that hook reports the form action's pending state for
+ * the whole duration of the server action and the redirect that follows, which
+ * a manual isLoading flag set inside the action doesn't reliably surface.
+ */
+function SubmitButton() {
+    const { pending } = useFormStatus()
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            className="w-full bg-brown text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+        >
+            {pending ? (
+                <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Setting up…
+                </>
+            ) : (
+                'Continue to My Account'
+            )}
+        </button>
+    )
 }
 
 const STRENGTH_LABEL: Record<StrengthLevel, string> = {
@@ -30,19 +57,16 @@ export default function WelcomeForm({ email }: WelcomeFormProps) {
     const [showPassword, setShowPassword] = useState(false)
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
 
     const strength = useMemo(() => checkPasswordStrength(password), [password])
 
     const handleSubmit = async (formData: FormData) => {
-        setIsLoading(true)
         setError(null)
 
         const result = await setInitialPassword(formData)
 
         if (result?.error) {
             setError(result.error)
-            setIsLoading(false)
         }
         // On success the server action redirects to /my-account
     }
@@ -162,20 +186,7 @@ export default function WelcomeForm({ email }: WelcomeFormProps) {
                                 />
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-full bg-brown text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mt-2"
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        Setting up…
-                                    </>
-                                ) : (
-                                    'Continue to My Account'
-                                )}
-                            </button>
+                            <SubmitButton />
                         </form>
                     </div>
                 </div>
