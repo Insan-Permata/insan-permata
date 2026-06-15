@@ -13,9 +13,9 @@ type Props = {
 export default function DonationForm({ accountEmail }: Props) {
   const isEmailLocked = Boolean(accountEmail);
 
-  const [donationType, setDonationType] = useState<'once' | 'monthly'>('once');
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(25);
-  const [customAmount, setCustomAmount] = useState<string>('25');
+  const [donationType, setDonationType] = useState<'once' | 'monthly'>('monthly');
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(20);
+  const [customAmount, setCustomAmount] = useState<string>('20');
   const [amountError, setAmountError] = useState<string>('');
   const [email, setEmail] = useState<string>(accountEmail ?? '');
   const [emailError, setEmailError] = useState<string>('');
@@ -28,7 +28,7 @@ export default function DonationForm({ accountEmail }: Props) {
     setTurnstileToken(token);
   }, []);
 
-  const presetAmounts = [10, 25, 100];
+  const presetAmounts = [10, 20, 40];
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -147,15 +147,6 @@ export default function DonationForm({ accountEmail }: Props) {
         {/* One-time vs Monthly Toggle */}
         <div className="flex gap-3 mb-6">
           <button
-            onClick={() => setDonationType('once')}
-            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all ${donationType === 'once'
-              ? 'bg-[#355872] text-white'
-              : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
-              }`}
-          >
-            Give once
-          </button>
-          <button
             onClick={() => setDonationType('monthly')}
             className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${donationType === 'monthly'
               ? 'bg-[#355872] text-white'
@@ -168,6 +159,15 @@ export default function DonationForm({ accountEmail }: Props) {
                 <path fillRule="evenodd" d="   M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
               </svg>
             )}
+          </button>
+          <button
+            onClick={() => setDonationType('once')}
+            className={`flex-1 py-3 px-6 rounded-full font-semibold transition-all ${donationType === 'once'
+              ? 'bg-[#355872] text-white'
+              : 'bg-gray-100 text-[#292826] hover:bg-gray-200'
+              }`}
+          >
+            Give once
           </button>
         </div>
 
