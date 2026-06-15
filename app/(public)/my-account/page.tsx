@@ -118,7 +118,7 @@ export default async function MyAccountPage() {
                             className="inline-flex items-center justify-center gap-2 bg-[#355872] text-white font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition-opacity whitespace-nowrap"
                         >
                             <FileText className="w-4 h-4" />
-                            Generate Statement
+                            Get a Statement
                         </Link>
                     </div>
 
