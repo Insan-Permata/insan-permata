@@ -33,7 +33,14 @@ export default function CallbackHandler() {
 
         const supabase = createBrowserClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                // We parse the invite payload (tokens / error) out of the URL ourselves
+                // below. Disable auth-js's own URL detection so it doesn't race us —
+                // otherwise it can clear the hash or fire a duplicate SIGNED_IN that
+                // resolves our onAuthStateChange wait before the session is committed.
+                auth: { detectSessionInUrl: false },
+            }
         )
 
         async function handleCallback() {
@@ -45,7 +52,6 @@ export default function CallbackHandler() {
             const hashError = hashParams.get('error_description') ?? hashParams.get('error')
 
             try {
-                // Supabase puts errors (expired token, etc.) in the hash for implicit flow
                 if (hashError || queryError) {
                     throw new Error(hashError || queryError || 'Unknown error')
                 }
@@ -60,11 +66,26 @@ export default function CallbackHandler() {
                     const refreshToken = hashParams.get('refresh_token')
                     if (!refreshToken) throw new Error('Missing refresh_token in invite link.')
 
-                    const { error } = await supabase.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken,
+                    // Wait for onAuthStateChange to confirm the session is committed
+                    // to cookies before navigating — avoids a race where the middleware
+                    // reads cookies before @supabase/ssr has written them.
+                    await new Promise<void>((resolve, reject) => {
+                        const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+                            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+                                subscription.unsubscribe()
+                                resolve()
+                            }
+                        })
+                        supabase.auth.setSession({
+                            access_token: accessToken,
+                            refresh_token: refreshToken,
+                        }).then(({ error }) => {
+                            if (error) {
+                                subscription.unsubscribe()
+                                reject(error)
+                            }
+                        })
                     })
-                    if (error) throw error
 
                     // Clear the hash so tokens don't linger in the address bar / history
                     window.history.replaceState(null, '', window.location.pathname + window.location.search)
@@ -77,38 +98,43 @@ export default function CallbackHandler() {
                 window.location.replace(next)
             } catch (err) {
                 console.error('[Auth callback]', err)
-                const message = err instanceof Error ? err.message : 'Unknown error'
-                setErrorMessage(
-                    `This invitation link is invalid or has already been used (${message}). Please donate again or contact support to receive a new invite.`
-                )
+                setErrorMessage('expired')
             }
         }
 
         handleCallback()
     }, [next])
 
+    if (!errorMessage) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background p-4">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-brown border-t-transparent mb-4" />
+                    <p className="text-foreground/60">Verifying your invitation…</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
             <div className="text-center max-w-md">
-                {errorMessage ? (
-                    <>
-                        <h1 className="text-xl font-bold text-foreground mb-3">
-                            Couldn&apos;t verify your invitation
-                        </h1>
-                        <p className="text-foreground/60 mb-6">{errorMessage}</p>
-                        <a
-                            href="/login"
-                            className="inline-flex items-center justify-center bg-brown text-white font-semibold px-5 py-3 rounded-lg hover:opacity-90 transition-opacity"
-                        >
-                            Go to Sign In
-                        </a>
-                    </>
-                ) : (
-                    <>
-                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-brown border-t-transparent mb-4" />
-                        <p className="text-foreground/60">Verifying your invitation…</p>
-                    </>
-                )}
+                <h1 className="text-xl font-bold text-foreground mb-3">
+                    Invitation link expired
+                </h1>
+                <p className="text-foreground/60 mb-6">
+                    This link has already been used or has expired. Email us at{' '}
+                    <a href="mailto:info@insanpermata.org" className="text-brown hover:underline">
+                        info@insanpermata.org
+                    </a>{' '}
+                    and we&apos;ll send you a new one.
+                </p>
+                <a
+                    href="/login"
+                    className="inline-flex items-center justify-center bg-brown text-white font-semibold px-5 py-3 rounded-lg hover:opacity-90 transition-opacity"
+                >
+                    Sign in
+                </a>
             </div>
         </div>
     )
