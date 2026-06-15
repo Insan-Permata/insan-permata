@@ -18,9 +18,16 @@ export default function UnauthorizedPage() {
                 </h1>
 
                 {/* Message */}
-                <p className="text-foreground/60 text-base leading-relaxed mb-8">
+                <p className="text-foreground/60 text-base leading-relaxed mb-4">
                     This page is only available to logged-in members of Insan Permata.
                     Please sign in to continue.
+                </p>
+
+                {/* Hint for donors who haven't activated yet */}
+                <p className="text-foreground/60 text-sm leading-relaxed mb-8">
+                    Already made a donation? Check your email (including the spam folder) for
+                    your invitation to activate your account, then sign in to view your
+                    donation history.
                 </p>
 
                 {/* Actions */}

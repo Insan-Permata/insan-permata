@@ -71,6 +71,9 @@ export default async function DonationSuccessPage({
                                 If that email isn&apos;t yet linked to an account, an invitation to create
                                 one is on its way too. Check your spam folder if you don&apos;t see it.
                             </p>
+                            <p className="text-sm text-[#292826] opacity-70 leading-relaxed mt-3">
+                                Already activated your account? You can sign in and view your donation history anytime.
+                            </p>
                             <Link
                                 href="/my-account"
                                 className="inline-flex items-center gap-1.5 text-[#355872] font-semibold text-sm mt-3 hover:underline"
